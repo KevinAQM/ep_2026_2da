@@ -174,8 +174,8 @@ export default function Dashboard() {
             borderColor: 'rgba(255,255,255,0.08)',
             borderWidth: 1,
             padding: 12,
-            titleFont: { family: 'Outfit', weight: '700' },
-            bodyFont: { family: 'Inter' },
+            titleFont: { family: 'Geist', weight: '700' },
+            bodyFont: { family: 'Geist' },
             callbacks: {
               label: function(context) {
                 const val = context.raw.toFixed(3);
@@ -276,15 +276,15 @@ export default function Dashboard() {
         },
         plugins: {
           legend: {
-            labels: { color: '#f3f4f6', font: { family: 'Outfit', weight: '600' } }
+            labels: { color: '#f3f4f6', font: { family: 'Geist', weight: '600' } }
           },
           tooltip: {
             backgroundColor: '#0c1222',
             borderColor: 'rgba(255,255,255,0.08)',
             borderWidth: 1,
             padding: 12,
-            titleFont: { family: 'Outfit', weight: '700' },
-            bodyFont: { family: 'Inter' },
+            titleFont: { family: 'Geist', weight: '700' },
+            bodyFont: { family: 'Geist' },
             callbacks: {
               label: function(context) {
                 return ` ${context.dataset.label}: ${context.raw.toFixed(3)}%`;
@@ -447,23 +447,25 @@ export default function Dashboard() {
       <main className="container">
         
         {/* MAIN TAB NAVIGATION */}
-        <div className="tabs-container">
-          <button 
-            className={`tab-btn ${currentTab === 'peru' ? 'active' : ''}`}
-            onClick={() => handleTabChange('peru')}
-            title="Ver votos de territorio nacional"
-          >
-            <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-            PERÚ (Voto Nacional)
-          </button>
-          <button 
-            className={`tab-btn ${currentTab === 'extranjero' ? 'active' : ''}`}
-            onClick={() => handleTabChange('extranjero')}
-            title="Ver votos del exterior por continente"
-          >
-            <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-            EXTRANJERO (Voto Exterior)
-          </button>
+        <div className="tabs-wrapper">
+          <div className="tabs-container">
+            <button 
+              className={`tab-btn ${currentTab === 'peru' ? 'active' : ''}`}
+              onClick={() => handleTabChange('peru')}
+              title="Ver votos de territorio nacional"
+            >
+              <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+              PERÚ (Voto Nacional)
+            </button>
+            <button 
+              className={`tab-btn ${currentTab === 'extranjero' ? 'active' : ''}`}
+              onClick={() => handleTabChange('extranjero')}
+              title="Ver votos del exterior por continente"
+            >
+              <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              EXTRANJERO (Voto Exterior)
+            </button>
+          </div>
         </div>
         
         {/* HERO SECTION: NATIONAL SUMMARY */}
@@ -778,7 +780,7 @@ export default function Dashboard() {
         <div className="container footer-inner">
           <p>Dashboard de Análisis Independiente de Datos Electorales. Segunda Vuelta Presidencial Perú 2026.</p>
           <p>Los datos mostrados provienen directamente de los servidores oficiales de la <strong>Oficina Nacional de Procesos Electorales (ONPE)</strong>.</p>
-          <p>&copy; 2026 Antigravity Data Analytics. Todos los derechos reservados.</p>
+          <p>&copy; 2026 QM Solutions - Data Analytics Department. Todos los derechos reservados.</p>
         </div>
       </footer>
     </>
