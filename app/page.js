@@ -174,8 +174,8 @@ export default function Dashboard() {
             borderColor: 'rgba(255,255,255,0.08)',
             borderWidth: 1,
             padding: 12,
-            titleFont: { family: 'Geist', weight: '700' },
-            bodyFont: { family: 'Geist' },
+            titleFont: { family: 'Open Sans', weight: '700' },
+            bodyFont: { family: 'Roboto' },
             callbacks: {
               label: function(context) {
                 const val = context.raw.toFixed(3);
@@ -217,7 +217,7 @@ export default function Dashboard() {
     
     if (serie.length === 0) {
       ctx.clearRect(0, 0, 300, 200);
-      ctx.font = '14px Inter';
+      ctx.font = '14px Roboto';
       ctx.fillStyle = '#6b7280';
       ctx.textAlign = 'center';
       ctx.fillText('No hay datos históricos grabados todavía.', 150, 100);
@@ -263,28 +263,28 @@ export default function Dashboard() {
         scales: {
           x: {
             grid: { color: 'rgba(255,255,255,0.02)' },
-            ticks: { color: '#9ca3af', font: { family: 'Inter', size: 9 } }
+            ticks: { color: '#9ca3af', font: { family: 'Roboto', size: 9 } }
           },
           y: {
             grid: { color: 'rgba(255,255,255,0.02)' },
             ticks: {
               color: '#9ca3af',
-              font: { family: 'Inter' },
+              font: { family: 'Roboto' },
               callback: function(val) { return val.toFixed(3) + '%'; }
             }
           }
         },
         plugins: {
           legend: {
-            labels: { color: '#f3f4f6', font: { family: 'Geist', weight: '600' } }
+            labels: { color: '#f3f4f6', font: { family: 'Open Sans', weight: '600' } }
           },
           tooltip: {
             backgroundColor: '#0c1222',
             borderColor: 'rgba(255,255,255,0.08)',
             borderWidth: 1,
             padding: 12,
-            titleFont: { family: 'Geist', weight: '700' },
-            bodyFont: { family: 'Geist' },
+            titleFont: { family: 'Open Sans', weight: '700' },
+            bodyFont: { family: 'Roboto' },
             callbacks: {
               label: function(context) {
                 return ` ${context.dataset.label}: ${context.raw.toFixed(3)}%`;
