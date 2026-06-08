@@ -181,7 +181,7 @@ export default function Dashboard() {
                 const val = context.raw.toFixed(3);
                 const label = context.label;
                 const votes = context.dataIndex === 0 ? data.keiko : data.roberto;
-                return ` ${label}: ${val}% (${votes.toLocaleString('es-PE')} v.)`;
+                return ` ${label}: ${val}% (${votes.toLocaleString('es-PE')} votos)`;
               }
             }
           }
@@ -496,7 +496,7 @@ export default function Dashboard() {
                 className={`toggle-btn ${currentViewMode === 'extrapolated' ? 'active' : ''}`}
                 onClick={() => setCurrentViewMode('extrapolated')}
               >
-                Proyección Extrapolada
+                Proyección Estimada
               </button>
             </div>
           </section>
@@ -537,7 +537,7 @@ export default function Dashboard() {
                   <p>Análisis ponderado regional · Excluye voto extranjero</p>
                 </div>
                 <div className="badge-margin">
-                  Diferencia: <span className="mono-font">{natData.margin.toLocaleString('es-PE')} v.</span>
+                  Diferencia: <span className="mono-font">{natData.margin.toLocaleString('es-PE')} votos</span>
                 </div>
               </div>
               
