@@ -1,0 +1,1287 @@
+// generated automatically by updater.py
+const ELECTION_DATA = {
+  "regiones": [
+    {
+      "ubigeo": "010000",
+      "nombre": "AMAZONAS",
+      "actasContabilizadas": 91.08,
+      "totalActas": 1278,
+      "contabilizadas": 1164,
+      "totalVotos": 195397,
+      "votosValidos": 182767,
+      "keiko_votos": 67954,
+      "roberto_votos": 114813,
+      "blank_votos": 1569,
+      "null_votos": 11061,
+      "keiko_projected": 74609,
+      "roberto_projected": 126057,
+      "serie": [
+        {
+          "a": 62.819,
+          "b": 37.181,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 62.819,
+          "b": 37.181,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 62.819,
+          "b": 37.181,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 62.819,
+          "b": 37.181,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 62.819,
+          "b": 37.181,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "020000",
+      "nombre": "ÁNCASH",
+      "actasContabilizadas": 98.646,
+      "totalActas": 3472,
+      "contabilizadas": 3425,
+      "totalVotos": 672120,
+      "votosValidos": 616143,
+      "keiko_votos": 267408,
+      "roberto_votos": 348735,
+      "blank_votos": 6014,
+      "null_votos": 49963,
+      "keiko_projected": 271078,
+      "roberto_projected": 353522,
+      "serie": [
+        {
+          "a": 56.6,
+          "b": 43.4,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 56.6,
+          "b": 43.4,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 56.6,
+          "b": 43.4,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 56.6,
+          "b": 43.4,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 56.6,
+          "b": 43.4,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "030000",
+      "nombre": "APURÍMAC",
+      "actasContabilizadas": 99.241,
+      "totalActas": 1317,
+      "contabilizadas": 1307,
+      "totalVotos": 243179,
+      "votosValidos": 228957,
+      "keiko_votos": 43132,
+      "roberto_votos": 185825,
+      "blank_votos": 1910,
+      "null_votos": 12312,
+      "keiko_projected": 43462,
+      "roberto_projected": 187246,
+      "serie": [
+        {
+          "a": 81.162,
+          "b": 18.838,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 81.162,
+          "b": 18.838,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 81.162,
+          "b": 18.838,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 81.162,
+          "b": 18.838,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 81.162,
+          "b": 18.838,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "040000",
+      "nombre": "AREQUIPA",
+      "actasContabilizadas": 99.383,
+      "totalActas": 4215,
+      "contabilizadas": 4189,
+      "totalVotos": 973014,
+      "votosValidos": 912807,
+      "keiko_votos": 332307,
+      "roberto_votos": 580500,
+      "blank_votos": 3771,
+      "null_votos": 56436,
+      "keiko_projected": 334370,
+      "roberto_projected": 584104,
+      "serie": [
+        {
+          "a": 63.595,
+          "b": 36.405,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 63.595,
+          "b": 36.405,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 63.595,
+          "b": 36.405,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 63.595,
+          "b": 36.405,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 63.595,
+          "b": 36.405,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "050000",
+      "nombre": "AYACUCHO",
+      "actasContabilizadas": 95.211,
+      "totalActas": 1900,
+      "contabilizadas": 1809,
+      "totalVotos": 329762,
+      "votosValidos": 312108,
+      "keiko_votos": 65177,
+      "roberto_votos": 246931,
+      "blank_votos": 2271,
+      "null_votos": 15383,
+      "keiko_projected": 68455,
+      "roberto_projected": 259351,
+      "serie": [
+        {
+          "a": 79.117,
+          "b": 20.883,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 79.117,
+          "b": 20.883,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 79.117,
+          "b": 20.883,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 79.117,
+          "b": 20.883,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 79.117,
+          "b": 20.883,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "060000",
+      "nombre": "CAJAMARCA",
+      "actasContabilizadas": 99.292,
+      "totalActas": 4240,
+      "contabilizadas": 4210,
+      "totalVotos": 792557,
+      "votosValidos": 735054,
+      "keiko_votos": 244352,
+      "roberto_votos": 490702,
+      "blank_votos": 7387,
+      "null_votos": 50116,
+      "keiko_projected": 246094,
+      "roberto_projected": 494201,
+      "serie": [
+        {
+          "a": 66.757,
+          "b": 33.243,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 66.757,
+          "b": 33.243,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 66.757,
+          "b": 33.243,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 66.757,
+          "b": 33.243,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 66.757,
+          "b": 33.243,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "240000",
+      "nombre": "CALLAO",
+      "actasContabilizadas": 97.619,
+      "totalActas": 2898,
+      "contabilizadas": 2829,
+      "totalVotos": 645392,
+      "votosValidos": 601172,
+      "keiko_votos": 394407,
+      "roberto_votos": 206765,
+      "blank_votos": 3095,
+      "null_votos": 41125,
+      "keiko_projected": 404027,
+      "roberto_projected": 211808,
+      "serie": [
+        {
+          "a": 34.394,
+          "b": 65.606,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 34.394,
+          "b": 65.606,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 34.394,
+          "b": 65.606,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 34.394,
+          "b": 65.606,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 34.394,
+          "b": 65.606,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "070000",
+      "nombre": "CUSCO",
+      "actasContabilizadas": 91.69,
+      "totalActas": 3983,
+      "contabilizadas": 3652,
+      "totalVotos": 758804,
+      "votosValidos": 709507,
+      "keiko_votos": 156998,
+      "roberto_votos": 552509,
+      "blank_votos": 4685,
+      "null_votos": 44612,
+      "keiko_projected": 171227,
+      "roberto_projected": 602584,
+      "serie": [
+        {
+          "a": 77.87,
+          "b": 22.13,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 77.87,
+          "b": 22.13,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 77.87,
+          "b": 22.13,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 77.872,
+          "b": 22.128,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 77.872,
+          "b": 22.128,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "080000",
+      "nombre": "HUANCAVELICA",
+      "actasContabilizadas": 99.136,
+      "totalActas": 1273,
+      "contabilizadas": 1262,
+      "totalVotos": 208702,
+      "votosValidos": 197366,
+      "keiko_votos": 36707,
+      "roberto_votos": 160659,
+      "blank_votos": 1538,
+      "null_votos": 9798,
+      "keiko_projected": 37027,
+      "roberto_projected": 162059,
+      "serie": [
+        {
+          "a": 81.402,
+          "b": 18.598,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 81.402,
+          "b": 18.598,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 81.402,
+          "b": 18.598,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 81.402,
+          "b": 18.598,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 81.402,
+          "b": 18.598,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "090000",
+      "nombre": "HUÁNUCO",
+      "actasContabilizadas": 97.95,
+      "totalActas": 2341,
+      "contabilizadas": 2293,
+      "totalVotos": 413545,
+      "votosValidos": 385800,
+      "keiko_votos": 138096,
+      "roberto_votos": 247704,
+      "blank_votos": 3144,
+      "null_votos": 24601,
+      "keiko_projected": 140986,
+      "roberto_projected": 252888,
+      "serie": [
+        {
+          "a": 64.132,
+          "b": 35.868,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 64.132,
+          "b": 35.868,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 64.132,
+          "b": 35.868,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 64.132,
+          "b": 35.868,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 64.205,
+          "b": 35.795,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "100000",
+      "nombre": "ICA",
+      "actasContabilizadas": 99.099,
+      "totalActas": 2443,
+      "contabilizadas": 2421,
+      "totalVotos": 570990,
+      "votosValidos": 538859,
+      "keiko_votos": 279728,
+      "roberto_votos": 259131,
+      "blank_votos": 3332,
+      "null_votos": 28799,
+      "keiko_projected": 282271,
+      "roberto_projected": 261487,
+      "serie": [
+        {
+          "a": 48.089,
+          "b": 51.911,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 48.089,
+          "b": 51.911,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 48.089,
+          "b": 51.911,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 48.089,
+          "b": 51.911,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 48.089,
+          "b": 51.911,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "110000",
+      "nombre": "JUNÍN",
+      "actasContabilizadas": 97.507,
+      "totalActas": 3691,
+      "contabilizadas": 3599,
+      "totalVotos": 753384,
+      "votosValidos": 704603,
+      "keiko_votos": 317670,
+      "roberto_votos": 386933,
+      "blank_votos": 4592,
+      "null_votos": 44189,
+      "keiko_projected": 325792,
+      "roberto_projected": 396826,
+      "serie": [
+        {
+          "a": 54.915,
+          "b": 45.085,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 54.915,
+          "b": 45.085,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 54.915,
+          "b": 45.085,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 54.915,
+          "b": 45.085,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 54.915,
+          "b": 45.085,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "120000",
+      "nombre": "LA LIBERTAD",
+      "actasContabilizadas": 99.283,
+      "totalActas": 5302,
+      "contabilizadas": 5264,
+      "totalVotos": 1128526,
+      "votosValidos": 1042352,
+      "keiko_votos": 599711,
+      "roberto_votos": 442641,
+      "blank_votos": 7048,
+      "null_votos": 79126,
+      "keiko_projected": 604042,
+      "roberto_projected": 445838,
+      "serie": [
+        {
+          "a": 42.466,
+          "b": 57.534,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 42.466,
+          "b": 57.534,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 42.466,
+          "b": 57.534,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 42.466,
+          "b": 57.534,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 42.466,
+          "b": 57.534,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "130000",
+      "nombre": "LAMBAYEQUE",
+      "actasContabilizadas": 99.582,
+      "totalActas": 3590,
+      "contabilizadas": 3575,
+      "totalVotos": 800672,
+      "votosValidos": 740113,
+      "keiko_votos": 435552,
+      "roberto_votos": 304561,
+      "blank_votos": 5222,
+      "null_votos": 55337,
+      "keiko_projected": 437380,
+      "roberto_projected": 305839,
+      "serie": [
+        {
+          "a": 41.151,
+          "b": 58.849,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 41.151,
+          "b": 58.849,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 41.151,
+          "b": 58.849,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 41.151,
+          "b": 58.849,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 41.151,
+          "b": 58.849,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "140000",
+      "nombre": "LIMA",
+      "actasContabilizadas": 96.858,
+      "totalActas": 29247,
+      "contabilizadas": 28328,
+      "totalVotos": 6616162,
+      "votosValidos": 6210774,
+      "keiko_votos": 3943740,
+      "roberto_votos": 2267034,
+      "blank_votos": 32047,
+      "null_votos": 373341,
+      "keiko_projected": 4071672,
+      "roberto_projected": 2340575,
+      "serie": [
+        {
+          "a": 36.5,
+          "b": 63.5,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 36.5,
+          "b": 63.5,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 36.502,
+          "b": 63.498,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 36.502,
+          "b": 63.498,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 36.502,
+          "b": 63.498,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "150000",
+      "nombre": "LORETO",
+      "actasContabilizadas": 79.236,
+      "totalActas": 2697,
+      "contabilizadas": 2137,
+      "totalVotos": 369323,
+      "votosValidos": 343752,
+      "keiko_votos": 188303,
+      "roberto_votos": 155449,
+      "blank_votos": 2785,
+      "null_votos": 22786,
+      "keiko_projected": 237648,
+      "roberto_projected": 196185,
+      "serie": [
+        {
+          "a": 45.238,
+          "b": 54.762,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 45.222,
+          "b": 54.778,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 45.274,
+          "b": 54.726,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 45.178,
+          "b": 54.822,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 45.221,
+          "b": 54.779,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "160000",
+      "nombre": "MADRE DE DIOS",
+      "actasContabilizadas": 94.872,
+      "totalActas": 507,
+      "contabilizadas": 481,
+      "totalVotos": 96787,
+      "votosValidos": 91796,
+      "keiko_votos": 28625,
+      "roberto_votos": 63171,
+      "blank_votos": 562,
+      "null_votos": 4429,
+      "keiko_projected": 30172,
+      "roberto_projected": 66586,
+      "serie": [
+        {
+          "a": 68.817,
+          "b": 31.183,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 68.817,
+          "b": 31.183,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 68.817,
+          "b": 31.183,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 68.817,
+          "b": 31.183,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 68.817,
+          "b": 31.183,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "170000",
+      "nombre": "MOQUEGUA",
+      "actasContabilizadas": 99.654,
+      "totalActas": 578,
+      "contabilizadas": 576,
+      "totalVotos": 128891,
+      "votosValidos": 121588,
+      "keiko_votos": 33353,
+      "roberto_votos": 88235,
+      "blank_votos": 622,
+      "null_votos": 6681,
+      "keiko_projected": 33469,
+      "roberto_projected": 88541,
+      "serie": [
+        {
+          "a": 72.569,
+          "b": 27.431,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 72.569,
+          "b": 27.431,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 72.569,
+          "b": 27.431,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 72.569,
+          "b": 27.431,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 72.569,
+          "b": 27.431,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "180000",
+      "nombre": "PASCO",
+      "actasContabilizadas": 98.254,
+      "totalActas": 802,
+      "contabilizadas": 788,
+      "totalVotos": 138446,
+      "votosValidos": 129217,
+      "keiko_votos": 50699,
+      "roberto_votos": 78518,
+      "blank_votos": 969,
+      "null_votos": 8260,
+      "keiko_projected": 51600,
+      "roberto_projected": 79913,
+      "serie": [
+        {
+          "a": 60.764,
+          "b": 39.236,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 60.764,
+          "b": 39.236,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 60.764,
+          "b": 39.236,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 60.764,
+          "b": 39.236,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 60.764,
+          "b": 39.236,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "190000",
+      "nombre": "PIURA",
+      "actasContabilizadas": 98.712,
+      "totalActas": 5281,
+      "contabilizadas": 5213,
+      "totalVotos": 1109473,
+      "votosValidos": 1021430,
+      "keiko_votos": 581730,
+      "roberto_votos": 439700,
+      "blank_votos": 8985,
+      "null_votos": 79058,
+      "keiko_projected": 589320,
+      "roberto_projected": 445437,
+      "serie": [
+        {
+          "a": 43.047,
+          "b": 56.953,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 43.047,
+          "b": 56.953,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 43.047,
+          "b": 56.953,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 43.047,
+          "b": 56.953,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 43.047,
+          "b": 56.953,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "200000",
+      "nombre": "PUNO",
+      "actasContabilizadas": 99.293,
+      "totalActas": 3397,
+      "contabilizadas": 3373,
+      "totalVotos": 740299,
+      "votosValidos": 704604,
+      "keiko_votos": 95674,
+      "roberto_votos": 608930,
+      "blank_votos": 2715,
+      "null_votos": 32980,
+      "keiko_projected": 96355,
+      "roberto_projected": 613266,
+      "serie": [
+        {
+          "a": 86.422,
+          "b": 13.578,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 86.422,
+          "b": 13.578,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 86.422,
+          "b": 13.578,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 86.422,
+          "b": 13.578,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 86.422,
+          "b": 13.578,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "210000",
+      "nombre": "SAN MARTÍN",
+      "actasContabilizadas": 99.408,
+      "totalActas": 2534,
+      "contabilizadas": 2519,
+      "totalVotos": 519487,
+      "votosValidos": 480565,
+      "keiko_votos": 218069,
+      "roberto_votos": 262496,
+      "blank_votos": 4553,
+      "null_votos": 34369,
+      "keiko_projected": 219368,
+      "roberto_projected": 264059,
+      "serie": [
+        {
+          "a": 54.622,
+          "b": 45.378,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 54.622,
+          "b": 45.378,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 54.622,
+          "b": 45.378,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 54.622,
+          "b": 45.378,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 54.622,
+          "b": 45.378,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "220000",
+      "nombre": "TACNA",
+      "actasContabilizadas": 98.655,
+      "totalActas": 1041,
+      "contabilizadas": 1027,
+      "totalVotos": 241440,
+      "votosValidos": 228208,
+      "keiko_votos": 65388,
+      "roberto_votos": 162820,
+      "blank_votos": 1117,
+      "null_votos": 12115,
+      "keiko_projected": 66279,
+      "roberto_projected": 165040,
+      "serie": [
+        {
+          "a": 71.347,
+          "b": 28.653,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 71.347,
+          "b": 28.653,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 71.347,
+          "b": 28.653,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 71.347,
+          "b": 28.653,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 71.347,
+          "b": 28.653,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "230000",
+      "nombre": "TUMBES",
+      "actasContabilizadas": 99.684,
+      "totalActas": 632,
+      "contabilizadas": 630,
+      "totalVotos": 138123,
+      "votosValidos": 127387,
+      "keiko_votos": 81960,
+      "roberto_votos": 45427,
+      "blank_votos": 993,
+      "null_votos": 9743,
+      "keiko_projected": 82220,
+      "roberto_projected": 45571,
+      "serie": [
+        {
+          "a": 35.661,
+          "b": 64.339,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 35.661,
+          "b": 64.339,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 35.661,
+          "b": 64.339,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 35.661,
+          "b": 64.339,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 35.661,
+          "b": 64.339,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "250000",
+      "nombre": "UCAYALI",
+      "actasContabilizadas": 90.729,
+      "totalActas": 1564,
+      "contabilizadas": 1419,
+      "totalVotos": 273057,
+      "votosValidos": 255776,
+      "keiko_votos": 136136,
+      "roberto_votos": 119640,
+      "blank_votos": 1990,
+      "null_votos": 15291,
+      "keiko_projected": 150047,
+      "roberto_projected": 131865,
+      "serie": [
+        {
+          "a": 46.753,
+          "b": 53.247,
+          "t": "01:58:00 PM"
+        },
+        {
+          "a": 46.753,
+          "b": 53.247,
+          "t": "02:02:00 PM"
+        },
+        {
+          "a": 46.753,
+          "b": 53.247,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 46.753,
+          "b": 53.247,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 46.775,
+          "b": 53.225,
+          "t": "02:48:00 PM"
+        }
+      ]
+    }
+  ],
+  "extranjero": [
+    {
+      "ubigeo": "910000",
+      "nombre": "ÁFRICA",
+      "actasContabilizadas": 0.0,
+      "totalActas": 6,
+      "contabilizadas": 0,
+      "totalVotos": 0,
+      "votosValidos": 0,
+      "keiko_votos": 0,
+      "roberto_votos": 0,
+      "blank_votos": 0,
+      "null_votos": 0,
+      "keiko_projected": 0,
+      "roberto_projected": 0,
+      "serie": [
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "920000",
+      "nombre": "AMÉRICA",
+      "actasContabilizadas": 4.204,
+      "totalActas": 1570,
+      "contabilizadas": 66,
+      "totalVotos": 13243,
+      "votosValidos": 12184,
+      "keiko_votos": 6688,
+      "roberto_votos": 5496,
+      "blank_votos": 134,
+      "null_votos": 925,
+      "keiko_projected": 159087,
+      "roberto_projected": 130733,
+      "serie": [
+        {
+          "a": 39.552,
+          "b": 60.448,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 39.552,
+          "b": 60.448,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 45.108,
+          "b": 54.892,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "930000",
+      "nombre": "ASIA",
+      "actasContabilizadas": 0.0,
+      "totalActas": 107,
+      "contabilizadas": 0,
+      "totalVotos": 0,
+      "votosValidos": 0,
+      "keiko_votos": 0,
+      "roberto_votos": 0,
+      "blank_votos": 0,
+      "null_votos": 0,
+      "keiko_projected": 0,
+      "roberto_projected": 0,
+      "serie": [
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "940000",
+      "nombre": "EUROPA",
+      "actasContabilizadas": 0.0,
+      "totalActas": 839,
+      "contabilizadas": 0,
+      "totalVotos": 0,
+      "votosValidos": 0,
+      "keiko_votos": 0,
+      "roberto_votos": 0,
+      "blank_votos": 0,
+      "null_votos": 0,
+      "keiko_projected": 0,
+      "roberto_projected": 0,
+      "serie": [
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:48:00 PM"
+        }
+      ]
+    },
+    {
+      "ubigeo": "950000",
+      "nombre": "OCEANÍA",
+      "actasContabilizadas": 0.0,
+      "totalActas": 21,
+      "contabilizadas": 0,
+      "totalVotos": 0,
+      "votosValidos": 0,
+      "keiko_votos": 0,
+      "roberto_votos": 0,
+      "blank_votos": 0,
+      "null_votos": 0,
+      "keiko_projected": 0,
+      "roberto_projected": 0,
+      "serie": [
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:12:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:18:00 PM"
+        },
+        {
+          "a": 50.0,
+          "b": 50.0,
+          "t": "02:48:00 PM"
+        }
+      ]
+    }
+  ],
+  "latest": {
+    "fechaActualizacion": 1780948080075
+  },
+  "projections_history": [
+    {
+      "timestamp": "2026-06-08T13:58:00.186000-05:00",
+      "time_display": "01:58:00 PM",
+      "acts_pct": 96.82231803420413,
+      "current_keiko": 8795741,
+      "current_roberto": 8812637,
+      "current_keiko_pct": 49.95202283821939,
+      "current_roberto_pct": 50.0479771617806,
+      "projected_keiko": 9074880,
+      "projected_roberto": 9085144,
+      "projected_keiko_pct": 49.97174012545358,
+      "projected_roberto_pct": 50.02825987454642
+    },
+    {
+      "timestamp": "2026-06-08T14:02:00.427000-05:00",
+      "time_display": "02:02:00 PM",
+      "acts_pct": 96.83451004732719,
+      "current_keiko": 8796410,
+      "current_roberto": 8813090,
+      "current_keiko_pct": 49.952639200431584,
+      "current_roberto_pct": 50.047360799568416,
+      "projected_keiko": 9074452,
+      "projected_roberto": 9084659,
+      "projected_keiko_pct": 49.97189565061858,
+      "projected_roberto_pct": 50.02810434938142
+    },
+    {
+      "timestamp": "2026-06-08T14:12:00.337000-05:00",
+      "time_display": "02:12:00 PM",
+      "acts_pct": 96.87219445152566,
+      "current_keiko": 8798196,
+      "current_roberto": 8814837,
+      "current_keiko_pct": 49.95275941400894,
+      "current_roberto_pct": 50.04724058599107,
+      "projected_keiko": 9072483,
+      "projected_roberto": 9083580,
+      "projected_keiko_pct": 49.96943996063464,
+      "projected_roberto_pct": 50.030560039365355
+    },
+    {
+      "timestamp": "2026-06-08T14:18:00.292000-05:00",
+      "time_display": "02:18:00 PM",
+      "acts_pct": 96.8976868426011,
+      "current_keiko": 8800302,
+      "current_roberto": 8816101,
+      "current_keiko_pct": 49.955158269256216,
+      "current_roberto_pct": 50.044841730743784,
+      "projected_keiko": 9072616,
+      "projected_roberto": 9082923,
+      "projected_keiko_pct": 49.97161472319825,
+      "projected_roberto_pct": 50.02838527680176
+    },
+    {
+      "timestamp": "2026-06-08T14:48:00.075000-05:00",
+      "time_display": "02:48:00 PM",
+      "acts_pct": 96.97083892133935,
+      "current_keiko": 8802876,
+      "current_roberto": 8819829,
+      "current_keiko_pct": 49.951900119760275,
+      "current_roberto_pct": 50.048099880239725,
+      "projected_keiko": 9068970,
+      "projected_roberto": 9080848,
+      "projected_keiko_pct": 49.967277908792255,
+      "projected_roberto_pct": 50.032722091207745
+    }
+  ]
+};
