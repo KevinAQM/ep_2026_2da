@@ -136,9 +136,18 @@ async function fetchItemData(idAmbito, item, existingSeriesMap) {
   
   // Rolling average projection using the last 10 updates (marginal trend)
   const baseIdx = Math.max(0, rSerie.length - 10);
-  const basePoint = rSerie[baseIdx] || {};
-  const keikoBase = basePoint.kv || 0;
-  const robertoBase = basePoint.rv || 0;
+  let basePoint = null;
+  for (let i = baseIdx; i < rSerie.length; i++) {
+    const pt = rSerie[i];
+    if (pt && typeof pt.kv === 'number' && typeof pt.rv === 'number') {
+      basePoint = pt;
+      break;
+    }
+  }
+
+  const keikoBase = basePoint ? (basePoint.kv || 0) : 0;
+  const robertoBase = basePoint ? (basePoint.rv || 0) : 0;
+  const hasBase = basePoint !== null;
   
   const deltaKeiko = keikoVotes - keikoBase;
   const deltaRoberto = robertoVotes - robertoBase;
@@ -148,7 +157,7 @@ async function fetchItemData(idAmbito, item, existingSeriesMap) {
   let shareRoberto = 0.5;
   const currValid = keikoVotes + robertoVotes;
   
-  if (deltaTotal > 0 && deltaKeiko >= 0 && deltaRoberto >= 0) {
+  if (hasBase && deltaTotal > 0 && deltaKeiko >= 0 && deltaRoberto >= 0) {
     shareKeiko = deltaKeiko / deltaTotal;
     shareRoberto = deltaRoberto / deltaTotal;
   } else if (currValid > 0) {

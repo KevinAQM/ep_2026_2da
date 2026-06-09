@@ -99,10 +99,16 @@ def fetch_ambito_data(base, id_ambito, items_list, existing_series_map):
         # Rolling average projection using the last 10 updates (marginal trend)
         n_points = len(r_serie)
         base_idx = max(0, n_points - 10)
-        base_point = r_serie[base_idx] if n_points > 0 else {}
-        
-        keiko_base = base_point.get("kv", 0)
-        roberto_base = base_point.get("rv", 0)
+        base_point = None
+        for i in range(base_idx, n_points):
+            pt = r_serie[i]
+            if pt and "kv" in pt and "rv" in pt and isinstance(pt["kv"], (int, float)) and isinstance(pt["rv"], (int, float)):
+                base_point = pt
+                break
+                
+        keiko_base = base_point.get("kv", 0) if base_point else 0
+        roberto_base = base_point.get("rv", 0) if base_point else 0
+        has_base = base_point is not None
         
         delta_keiko = keiko_votes - keiko_base
         delta_roberto = roberto_votes - roberto_base
@@ -111,7 +117,7 @@ def fetch_ambito_data(base, id_ambito, items_list, existing_series_map):
         share_keiko = 0.5
         share_roberto = 0.5
         
-        if delta_total > 0 and delta_keiko >= 0 and delta_roberto >= 0:
+        if has_base and delta_total > 0 and delta_keiko >= 0 and delta_roberto >= 0:
             share_keiko = delta_keiko / delta_total
             share_roberto = delta_roberto / delta_total
         elif curr_valid > 0:
