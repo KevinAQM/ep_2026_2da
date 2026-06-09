@@ -86,6 +86,88 @@ async function fetchJson(url) {
   }
 }
 
+// ──────────────────────────────────────────────────────────────────────────
+// EMA Projection: Computes projected votes at 100% using Exponential
+// Moving Average of the marginal vote share from the last N deltas.
+// ──────────────────────────────────────────────────────────────────────────
+function computeEmaProjection(rSerie, keikoVotes, robertoVotes, actasPct) {
+  const currValid = keikoVotes + robertoVotes;
+
+  // Default shares (fallback: use accumulated proportions)
+  let emaShareKeiko = currValid > 0 ? keikoVotes / currValid : 0.5;
+  let emaShareRoberto = currValid > 0 ? robertoVotes / currValid : 0.5;
+
+  // Collect all consecutive deltas from series entries that have kv/rv
+  let prevKv = null;
+  let prevRv = null;
+  let validDeltas = 0;
+  let emaK = null; // EMA of keiko's share of new votes
+  let emaR = null;
+
+  for (const pt of rSerie) {
+    if (pt && typeof pt.kv === 'number' && typeof pt.rv === 'number') {
+      if (prevKv !== null) {
+        const dk = pt.kv - prevKv;
+        const dr = pt.rv - prevRv;
+        const dt = dk + dr;
+        if (dt > 0 && dk >= 0 && dr >= 0) {
+          validDeltas++;
+          const N = Math.min(validDeltas, 10);
+          const alpha = 2 / (N + 1);
+          const sk = dk / dt;
+          const sr = dr / dt;
+          if (emaK === null) {
+            emaK = sk;
+            emaR = sr;
+          } else {
+            emaK = alpha * sk + (1 - alpha) * emaK;
+            emaR = alpha * sr + (1 - alpha) * emaR;
+          }
+        }
+      }
+      prevKv = pt.kv;
+      prevRv = pt.rv;
+    }
+  }
+
+  // Also include the delta from the last series point to current ONPE data
+  if (prevKv !== null) {
+    const dk = keikoVotes - prevKv;
+    const dr = robertoVotes - prevRv;
+    const dt = dk + dr;
+    if (dt > 0 && dk >= 0 && dr >= 0) {
+      validDeltas++;
+      const N = Math.min(validDeltas, 10);
+      const alpha = 2 / (N + 1);
+      const sk = dk / dt;
+      const sr = dr / dt;
+      if (emaK === null) {
+        emaK = sk;
+        emaR = sr;
+      } else {
+        emaK = alpha * sk + (1 - alpha) * emaK;
+        emaR = alpha * sr + (1 - alpha) * emaR;
+      }
+    }
+  }
+
+  // Use EMA shares if we have at least one valid delta
+  if (emaK !== null) {
+    emaShareKeiko = emaK;
+    emaShareRoberto = emaR;
+  }
+
+  // Estimate remaining valid votes and project
+  const factor = actasPct > 0 ? (100.0 / actasPct) : 1.0;
+  const validEst = currValid * factor;
+  const remaining = Math.max(0, validEst - currValid);
+
+  const extrapKeiko = Math.round(keikoVotes + remaining * emaShareKeiko);
+  const extrapRoberto = Math.round(robertoVotes + remaining * emaShareRoberto);
+
+  return { extrapKeiko, extrapRoberto };
+}
+
 // Scrape helper for a single department/continent
 async function fetchItemData(idAmbito, item, existingSeriesMap) {
   const ubigeo = item.ubigeo;
@@ -133,44 +215,11 @@ async function fetchItemData(idAmbito, item, existingSeriesMap) {
   }
   
   const rSerie = existingSeriesMap[ubigeo] || [];
-  
-  // Rolling average projection using the last 10 updates (marginal trend)
-  const baseIdx = Math.max(0, rSerie.length - 10);
-  let basePoint = null;
-  for (let i = baseIdx; i < rSerie.length; i++) {
-    const pt = rSerie[i];
-    if (pt && typeof pt.kv === 'number' && typeof pt.rv === 'number') {
-      basePoint = pt;
-      break;
-    }
-  }
 
-  const keikoBase = basePoint ? (basePoint.kv || 0) : 0;
-  const robertoBase = basePoint ? (basePoint.rv || 0) : 0;
-  const hasBase = basePoint !== null;
-  
-  const deltaKeiko = keikoVotes - keikoBase;
-  const deltaRoberto = robertoVotes - robertoBase;
-  const deltaTotal = deltaKeiko + deltaRoberto;
-  
-  let shareKeiko = 0.5;
-  let shareRoberto = 0.5;
-  const currValid = keikoVotes + robertoVotes;
-  
-  if (hasBase && deltaTotal > 0 && deltaKeiko >= 0 && deltaRoberto >= 0) {
-    shareKeiko = deltaKeiko / deltaTotal;
-    shareRoberto = deltaRoberto / deltaTotal;
-  } else if (currValid > 0) {
-    shareKeiko = keikoVotes / currValid;
-    shareRoberto = robertoVotes / currValid;
-  }
-  
-  const factor = actasPct > 0 ? (100.0 / actasPct) : 1.0;
-  const validEst = currValid * factor;
-  const remainingValidos = Math.max(0, validEst - currValid);
-  
-  const extrapKeiko = Math.round(keikoVotes + (remainingValidos * shareKeiko));
-  const extrapRoberto = Math.round(robertoVotes + (remainingValidos * shareRoberto));
+  // EMA-based projection
+  const { extrapKeiko, extrapRoberto } = computeEmaProjection(
+    rSerie, keikoVotes, robertoVotes, actasPct
+  );
   
   return {
     ubigeo,
@@ -191,8 +240,12 @@ async function fetchItemData(idAmbito, item, existingSeriesMap) {
   };
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
+    // Detect if this is a cron invocation
+    const isCron = request.headers.get('x-vercel-cron') === '1'
+                || request.headers.get('authorization') === `Bearer ${process.env.CRON_SECRET}`;
+
     // 1. Load existing database (Vercel KV or Local File)
     let dbData = { regiones: [], extranjero: [], latest: {}, projections_history: [] };
     let loadedFromKV = false;
@@ -280,7 +333,7 @@ export async function GET() {
       });
     }
     
-    // Calculate totals for change checking and time tracking
+    // Calculate totals for Peru
     let peTotalActs = 0;
     let peContab = 0;
     let peK = 0;
@@ -303,12 +356,26 @@ export async function GET() {
       if (r.epoch > peEpoch) peEpoch = r.epoch;
     }
     
+    // Calculate totals for Extranjero
     let exTotalActs = 0;
     let exContab = 0;
+    let exK = 0;
+    let exR = 0;
+    let exVal = 0;
+    let exExK = 0;
+    let exExR = 0;
+    let exExVal = 0;
     let exEpoch = 0;
+
     for (const r of exRecords) {
       exTotalActs += r.totalActas || 0;
       exContab += r.contabilizadas || 0;
+      exK += r.keiko_votos || 0;
+      exR += r.roberto_votos || 0;
+      exVal += (r.keiko_votos + r.roberto_votos);
+      exExK += r.keiko_projected || 0;
+      exExR += r.roberto_projected || 0;
+      exExVal += (r.keiko_projected + r.roberto_projected);
       if (r.epoch > exEpoch) exEpoch = r.epoch;
     }
     
@@ -318,21 +385,30 @@ export async function GET() {
     const maxUpdateEpoch = Math.max(peEpoch, exEpoch);
     const { timestampStr, timeDisplay } = getLimaTime(maxUpdateEpoch > 0 ? maxUpdateEpoch : Date.now());
     
-    // 4. Check if we should append to history (percentage of processed Peru acts changed)
-    let shouldAppend = true;
+    // 4. Separate shouldAppend checks for Peru and Extranjero
     const history = dbData.projections_history || [];
+    let shouldAppendPeru = true;
+    let shouldAppendExtra = true;
+
     if (history.length > 0) {
       const lastEntry = history[history.length - 1];
-      if (Math.abs(lastEntry.acts_pct - peActsPct) < 0.00001) {
-        shouldAppend = false;
+      // Check Peru progress
+      if (typeof lastEntry.acts_pct === 'number' && Math.abs(lastEntry.acts_pct - peActsPct) < 0.00001) {
+        shouldAppendPeru = false;
+      }
+      // Check Extranjero progress independently
+      if (typeof lastEntry.ex_acts_pct === 'number' && Math.abs(lastEntry.ex_acts_pct - exActsPct) < 0.00001) {
+        shouldAppendExtra = false;
       }
     }
-    
-    if (shouldAppend) {
+
+    // Add to projections_history if EITHER changed
+    if (shouldAppendPeru || shouldAppendExtra) {
       const newEntry = {
         timestamp: timestampStr,
         time_display: timeDisplay,
         acts_pct: peActsPct,
+        ex_acts_pct: exActsPct,
         current_keiko: peK,
         current_roberto: peR,
         current_keiko_pct: peVal > 0 ? (peK / peVal * 100) : 50.0,
@@ -340,11 +416,18 @@ export async function GET() {
         projected_keiko: peExK,
         projected_roberto: peExR,
         projected_keiko_pct: peExVal > 0 ? (peExK / peExVal * 100) : 50.0,
-        projected_roberto_pct: peExVal > 0 ? (peExR / peExVal * 100) : 50.0
+        projected_roberto_pct: peExVal > 0 ? (peExR / peExVal * 100) : 50.0,
+        // Extranjero totals in history
+        ex_current_keiko: exK,
+        ex_current_roberto: exR,
+        ex_projected_keiko: exExK,
+        ex_projected_roberto: exExR,
       };
       history.push(newEntry);
-      
-      // Append time point to Peru regions
+    }
+    
+    // Append time point to Peru regions (only if Peru data changed)
+    if (shouldAppendPeru) {
       for (const r of peRecords) {
         const valid = r.keiko_votos + r.roberto_votos;
         const kPct = valid > 0 ? (r.keiko_votos / valid * 100) : 50.0;
@@ -357,8 +440,10 @@ export async function GET() {
           rv: r.roberto_votos
         });
       }
-      
-      // Append time point to Extranjero continents
+    }
+    
+    // Append time point to Extranjero continents (only if Extranjero data changed)
+    if (shouldAppendExtra) {
       for (const r of exRecords) {
         const valid = r.keiko_votos + r.roberto_votos;
         const kPct = valid > 0 ? (r.keiko_votos / valid * 100) : 50.0;
@@ -392,10 +477,14 @@ export async function GET() {
       }
     }
     
-    // Send response with Vercel CDN Cache-Control headers (5 minutes cache, serving stale background refresh)
+    // CDN cache: 60s (reduced from 300s), cron calls bypass CDN
+    const cacheControl = isCron
+      ? 'no-store'
+      : 's-maxage=60, stale-while-revalidate=30';
+
     return NextResponse.json(combined, {
       headers: {
-        'Cache-Control': 's-maxage=300, stale-while-revalidate=59',
+        'Cache-Control': cacheControl,
         'Access-Control-Allow-Origin': '*'
       }
     });

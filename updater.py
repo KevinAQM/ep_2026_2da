@@ -28,6 +28,79 @@ def fetch_json(url):
         return None
     return None
 
+# ──────────────────────────────────────────────────────────────────────────
+# EMA Projection: Computes projected votes at 100% using Exponential
+# Moving Average of the marginal vote share from consecutive deltas.
+# ──────────────────────────────────────────────────────────────────────────
+def compute_ema_projection(r_serie, keiko_votes, roberto_votes, actas_pct):
+    curr_valid = keiko_votes + roberto_votes
+
+    # Default shares (fallback: use accumulated proportions)
+    ema_share_keiko = keiko_votes / curr_valid if curr_valid > 0 else 0.5
+    ema_share_roberto = roberto_votes / curr_valid if curr_valid > 0 else 0.5
+
+    # Collect all consecutive deltas from series entries that have kv/rv
+    prev_kv = None
+    prev_rv = None
+    valid_deltas = 0
+    ema_k = None
+    ema_r = None
+
+    for pt in r_serie:
+        if pt and "kv" in pt and "rv" in pt and isinstance(pt["kv"], (int, float)) and isinstance(pt["rv"], (int, float)):
+            if prev_kv is not None:
+                dk = pt["kv"] - prev_kv
+                dr = pt["rv"] - prev_rv
+                dt = dk + dr
+                if dt > 0 and dk >= 0 and dr >= 0:
+                    valid_deltas += 1
+                    n = min(valid_deltas, 10)
+                    alpha = 2 / (n + 1)
+                    sk = dk / dt
+                    sr = dr / dt
+                    if ema_k is None:
+                        ema_k = sk
+                        ema_r = sr
+                    else:
+                        ema_k = alpha * sk + (1 - alpha) * ema_k
+                        ema_r = alpha * sr + (1 - alpha) * ema_r
+            prev_kv = pt["kv"]
+            prev_rv = pt["rv"]
+
+    # Also include the delta from the last series point to current ONPE data
+    if prev_kv is not None:
+        dk = keiko_votes - prev_kv
+        dr = roberto_votes - prev_rv
+        dt = dk + dr
+        if dt > 0 and dk >= 0 and dr >= 0:
+            valid_deltas += 1
+            n = min(valid_deltas, 10)
+            alpha = 2 / (n + 1)
+            sk = dk / dt
+            sr = dr / dt
+            if ema_k is None:
+                ema_k = sk
+                ema_r = sr
+            else:
+                ema_k = alpha * sk + (1 - alpha) * ema_k
+                ema_r = alpha * sr + (1 - alpha) * ema_r
+
+    # Use EMA shares if we have at least one valid delta
+    if ema_k is not None:
+        ema_share_keiko = ema_k
+        ema_share_roberto = ema_r
+
+    # Estimate remaining valid votes and project
+    factor = 100.0 / actas_pct if actas_pct > 0 else 1.0
+    valid_est = curr_valid * factor
+    remaining = max(0, valid_est - curr_valid)
+
+    extrap_keiko = round(keiko_votes + remaining * ema_share_keiko)
+    extrap_roberto = round(roberto_votes + remaining * ema_share_roberto)
+
+    return extrap_keiko, extrap_roberto
+
+
 def fetch_ambito_data(base, id_ambito, items_list, existing_series_map):
     results = []
     
@@ -96,40 +169,10 @@ def fetch_ambito_data(base, id_ambito, items_list, existing_series_map):
         
         r_serie = existing_series_map.get(ubigeo, [])
         
-        # Rolling average projection using the last 10 updates (marginal trend)
-        n_points = len(r_serie)
-        base_idx = max(0, n_points - 10)
-        base_point = None
-        for i in range(base_idx, n_points):
-            pt = r_serie[i]
-            if pt and "kv" in pt and "rv" in pt and isinstance(pt["kv"], (int, float)) and isinstance(pt["rv"], (int, float)):
-                base_point = pt
-                break
-                
-        keiko_base = base_point.get("kv", 0) if base_point else 0
-        roberto_base = base_point.get("rv", 0) if base_point else 0
-        has_base = base_point is not None
-        
-        delta_keiko = keiko_votes - keiko_base
-        delta_roberto = roberto_votes - roberto_base
-        delta_total = delta_keiko + delta_roberto
-        
-        share_keiko = 0.5
-        share_roberto = 0.5
-        
-        if has_base and delta_total > 0 and delta_keiko >= 0 and delta_roberto >= 0:
-            share_keiko = delta_keiko / delta_total
-            share_roberto = delta_roberto / delta_total
-        elif curr_valid > 0:
-            share_keiko = keiko_votes / curr_valid
-            share_roberto = roberto_votes / curr_valid
-            
-        factor = 100.0 / actas_pct if actas_pct > 0 else 1.0
-        valid_est = curr_valid * factor
-        remaining_valid = max(0, valid_est - curr_valid)
-        
-        extrap_keiko = round(keiko_votes + (remaining_valid * share_keiko))
-        extrap_roberto = round(roberto_votes + (remaining_valid * share_roberto))
+        # EMA-based projection
+        extrap_keiko, extrap_roberto = compute_ema_projection(
+            r_serie, keiko_votes, roberto_votes, actas_pct
+        )
         extrap_valid = extrap_keiko + extrap_roberto
         
         # Accumulates
@@ -240,20 +283,30 @@ def main():
     timestamp_str = dt_update.isoformat()
     time_display = dt_update.strftime("%I:%M:%S %p")
     
-    # Check if we should append to national history (based on Peru acts percentage change)
-    should_append = True
+    # Separate shouldAppend checks for Peru and Extranjero
     history = db_data["projections_history"]
+    should_append_peru = True
+    should_append_extra = True
+
     if len(history) > 0:
         last = history[-1]
-        if abs(last["acts_pct"] - pe_acts_pct) < 0.00001:
-            should_append = False
-            print("\nNo new national Peru data progress. History timeline and regional/continental series not updated.")
-            
-    if should_append:
+        # Check Peru progress
+        if isinstance(last.get("acts_pct"), (int, float)) and abs(last["acts_pct"] - pe_acts_pct) < 0.00001:
+            should_append_peru = False
+        # Check Extranjero progress independently
+        if isinstance(last.get("ex_acts_pct"), (int, float)) and abs(last["ex_acts_pct"] - ex_acts_pct) < 0.00001:
+            should_append_extra = False
+
+    if not should_append_peru and not should_append_extra:
+        print("\nNo new data progress for Peru or Extranjero. Series not updated.")
+    
+    # Add to projections_history if EITHER changed
+    if should_append_peru or should_append_extra:
         new_entry = {
             "timestamp": timestamp_str,
             "time_display": time_display,
             "acts_pct": pe_acts_pct,
+            "ex_acts_pct": ex_acts_pct,
             "current_keiko": pe_k,
             "current_roberto": pe_r,
             "current_keiko_pct": (pe_k / pe_val * 100) if pe_val > 0 else 50.0,
@@ -261,11 +314,17 @@ def main():
             "projected_keiko": pe_ex_k,
             "projected_roberto": pe_ex_r,
             "projected_keiko_pct": (pe_ex_k / pe_ex_val * 100) if pe_ex_val > 0 else 50.0,
-            "projected_roberto_pct": (pe_ex_r / pe_ex_val * 100) if pe_ex_val > 0 else 50.0
+            "projected_roberto_pct": (pe_ex_r / pe_ex_val * 100) if pe_ex_val > 0 else 50.0,
+            # Extranjero totals in history
+            "ex_current_keiko": ex_k,
+            "ex_current_roberto": ex_r,
+            "ex_projected_keiko": ex_ex_k,
+            "ex_projected_roberto": ex_ex_r,
         }
         history.append(new_entry)
         
-        # Append corresponding point to each Peru region's serie
+    # Append corresponding point to each Peru region's serie (only if Peru changed)
+    if should_append_peru:
         for r in pe_records:
             valid = r["keiko_votos"] + r["roberto_votos"]
             k_pct = (r["keiko_votos"] / valid * 100) if valid > 0 else 50.0
@@ -277,8 +336,10 @@ def main():
                 "kv": r["keiko_votos"],
                 "rv": r["roberto_votos"]
             })
+        print(f"\nAppended Peru snapshot at {time_display} (Acts: {pe_acts_pct:.3f}%)")
             
-        # Append corresponding point to each continent's serie
+    # Append corresponding point to each continent's serie (only if Extranjero changed)
+    if should_append_extra:
         for r in ex_records:
             valid = r["keiko_votos"] + r["roberto_votos"]
             k_pct = (r["keiko_votos"] / valid * 100) if valid > 0 else 50.0
@@ -290,8 +351,7 @@ def main():
                 "kv": r["keiko_votos"],
                 "rv": r["roberto_votos"]
             })
-            
-        print(f"\nAppended new snapshot at {time_display} (Peru Acts: {pe_acts_pct:.3f}%, Extranjero Acts: {ex_acts_pct:.3f}%)")
+        print(f"Appended Extranjero snapshot at {time_display} (Acts: {ex_acts_pct:.3f}%)")
         
     combined = {
         "regiones": pe_records,
