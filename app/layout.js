@@ -20,10 +20,10 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "Proyección y Extrapolación Segunda Vuelta 2026 · ONPE Oficial",
-  description: "Dashboard premium de proyección y extrapolación matemática al 100% de actas contabilizadas para las elecciones presidenciales de segunda vuelta en Perú 2026.",
-  keywords: "elecciones 2026, segunda vuelta peru, ONPE api, extrapolacion electoral, Keiko Fujimori, Roberto Sanchez, ciencia de datos electoral",
-  authors: [{ name: "Antigravity Data Analytics" }],
+  title: "Elecciones Presidenciales 2026 - Segunda Vuelta · Resultados ONPE y Proyecciones",
+  description: "Resultados oficiales ONPE y proyecciones estadísticas al 100% de actas para las elecciones presidenciales de segunda vuelta en Perú 2026. Voto nacional y exterior en tiempo real.",
+  keywords: "elecciones 2026, segunda vuelta peru, ONPE resultados, extrapolacion electoral, Keiko Fujimori, Roberto Sanchez, proyeccion electoral",
+  authors: [{ name: "QM Solutions - Data Analytics Department" }],
 };
 
 export default function RootLayout({ children }) {

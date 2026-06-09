@@ -122,6 +122,7 @@ a:hover {
   border: 1px solid var(--border-color);
   border-radius: 20px;
   box-shadow: var(--shadow-main);
+  overflow: visible;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.3s ease,
               box-shadow 0.3s ease,
@@ -263,7 +264,7 @@ main {
 
 @media (min-width: 900px) {
   .national-layout {
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: 1fr 380px;
   }
 }
 
@@ -274,6 +275,7 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
 .card-title {
@@ -291,6 +293,7 @@ main {
   width: 220px;
   height: 220px;
   margin: 0 auto;
+  overflow: visible;
 }
 
 .doughnut-center-lbl {
@@ -894,6 +897,10 @@ main {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   overflow-y: auto;
   max-height: 90vh;
+  /* Override glass-card transparency — ~90% opaque */
+  background: rgba(8, 10, 18, 0.92) !important;
+  backdrop-filter: blur(32px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
 }
 
 .modal-overlay.active .modal-card {

@@ -142,7 +142,6 @@ export default function Dashboard() {
     if (!processedData || !nationalChartRef.current) return;
     
     const ctx = nationalChartRef.current.getContext('2d');
-    
     const nat = processedData.national[currentTab];
     const isExtrap = currentViewMode === 'extrapolated';
     const data = isExtrap ? nat.extrapolated : nat.current;
@@ -150,6 +149,58 @@ export default function Dashboard() {
     if (nationalChartInstance.current) {
       nationalChartInstance.current.destroy();
     }
+
+    // External HTML tooltip — bypasses canvas completely, fully opaque
+    const getOrCreateTooltip = () => {
+      let el = document.getElementById('donut-tooltip-el');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'donut-tooltip-el';
+        document.body.appendChild(el);
+      }
+      return el;
+    };
+
+    const externalTooltipHandler = (context) => {
+      const { chart, tooltip } = context;
+      const el = getOrCreateTooltip();
+
+      if (tooltip.opacity === 0) {
+        el.style.opacity = '0';
+        return;
+      }
+
+      const dataIdx = tooltip.dataPoints?.[0]?.dataIndex ?? 0;
+      const isKeiko = dataIdx === 0;
+      const label = isKeiko ? 'Keiko Fujimori' : 'Roberto Sánchez';
+      const pct = (isKeiko ? data.keikoPct : data.robertoPct).toFixed(3);
+      const votes = (isKeiko ? data.keiko : data.roberto).toLocaleString('es-PE');
+      const color = isKeiko ? '#ff7c44' : '#10b981';
+
+      el.innerHTML = `
+        <div style="font-family:'Open Sans',sans-serif;font-weight:700;font-size:12px;color:${color};margin-bottom:5px;text-transform:uppercase;letter-spacing:0.03em;">${label}</div>
+        <div style="font-family:'Open Sans',sans-serif;font-weight:800;font-size:18px;color:#f9fafb;line-height:1;">${pct}%</div>
+        <div style="font-family:'Roboto',sans-serif;font-size:12px;color:#9ca3af;margin-top:4px;">${votes} votos</div>
+      `;
+
+      const rect = chart.canvas.getBoundingClientRect();
+      el.style.cssText = `
+        position: fixed;
+        pointer-events: none;
+        z-index: 99999;
+        opacity: 1;
+        background: #080c14;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 12px;
+        padding: 14px 18px;
+        white-space: nowrap;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
+        transition: opacity 0.12s ease;
+        left: ${rect.left + tooltip.caretX}px;
+        top: ${rect.top + tooltip.caretY}px;
+        transform: translate(-50%, -115%);
+      `;
+    };
     
     nationalChartInstance.current = new Chart(ctx, {
       type: 'doughnut',
@@ -170,20 +221,8 @@ export default function Dashboard() {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: '#0c1222',
-            borderColor: 'rgba(255,255,255,0.08)',
-            borderWidth: 1,
-            padding: 12,
-            titleFont: { family: 'Open Sans', weight: '700' },
-            bodyFont: { family: 'Roboto' },
-            callbacks: {
-              label: function(context) {
-                const val = context.raw.toFixed(3);
-                const label = context.label;
-                const votes = context.dataIndex === 0 ? data.keiko : data.roberto;
-                return ` ${label}: ${val}% (${votes.toLocaleString('es-PE')} votos)`;
-              }
-            }
+            enabled: false,
+            external: externalTooltipHandler,
           }
         }
       }
@@ -194,6 +233,8 @@ export default function Dashboard() {
         nationalChartInstance.current.destroy();
         nationalChartInstance.current = null;
       }
+      const el = document.getElementById('donut-tooltip-el');
+      if (el) el.style.opacity = '0';
     };
   }, [processedData, currentTab, currentViewMode]);
 
@@ -429,8 +470,8 @@ export default function Dashboard() {
               <span className="dot-green"></span>
             </div>
             <div className="brand-text">
-              <h1>ONPE Proyecciones 2026</h1>
-              <p>Análisis Estadístico de Extrapolación de Segunda Vuelta</p>
+              <h1>Elecciones Presidenciales 2026 - Segunda Vuelta</h1>
+              <p>Resultados ONPE y Proyecciones.</p>
             </div>
           </div>
           
@@ -474,12 +515,12 @@ export default function Dashboard() {
             {currentTab === 'peru' ? (
               <>
                 <svg className="title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-                Consolidado Nacional (25 Regiones)
+                {isExtrap ? 'Proyección Nacional al 100% — 25 Regiones' : 'Votos Oficiales ONPE — Territorio Nacional'}
               </>
             ) : (
               <>
                 <svg className="title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                Consolidado Extranjero (5 Continentes)
+                {isExtrap ? 'Proyección Exterior al 100% — 5 Continentes' : 'Votos Oficiales ONPE — Voto Exterior'}
               </>
             )}
           </h2>
@@ -515,28 +556,28 @@ export default function Dashboard() {
           </div>
           
           <div className="national-layout">
-            {/* Doughnut Votes Distribution Card */}
-            <div className="glass-card doughnut-card">
-              <h3 className="card-title">Distribución de Votos Válidos</h3>
-              <div className="doughnut-canvas-container">
-                <canvas ref={nationalChartRef}></canvas>
-                <div className="doughnut-center-lbl">
-                  <span className="mono-font">{nat.actsPct.toFixed(3)}%</span>
-                  <span className="center-sub">Actas</span>
-                </div>
-              </div>
-            </div>
-            
-            {/* Comparison Statistics Card */}
+            {/* Comparison Statistics Card — first */}
             <div className="glass-card metrics-card">
               <div className="metrics-header">
                 <div className="metrics-title-group">
                   <h3>
-                    {isExtrap 
-                      ? (currentTab === 'peru' ? 'Proyección al 100% de Actas (Perú)' : 'Proyección al 100% de Actas (Extranjero)')
-                      : (currentTab === 'peru' ? 'Resultados Oficiales ONPE (Perú)' : 'Resultados Oficiales ONPE (Extranjero)')}
+                    {isExtrap
+                      ? (currentTab === 'peru'
+                          ? 'Proyección al 100% de Actas — Territorio Nacional'
+                          : 'Proyección al 100% de Actas — Voto Exterior')
+                      : (currentTab === 'peru'
+                          ? 'Resultados Oficiales ONPE — Territorio Nacional'
+                          : 'Resultados Oficiales ONPE — Voto Exterior')}
                   </h3>
-                  <p>Análisis ponderado regional · Excluye voto extranjero</p>
+                  <p>
+                    {isExtrap
+                      ? (currentTab === 'peru'
+                          ? 'Estimación ponderada por región al 100% de actas escrutadas'
+                          : 'Estimación ponderada por continente al 100% de actas escrutadas')
+                      : (currentTab === 'peru'
+                          ? 'Votos válidos contabilizados oficialmente por la ONPE — 25 regiones'
+                          : 'Votos válidos contabilizados oficialmente por la ONPE — 5 continentes')}
+                  </p>
                 </div>
                 <div className="badge-margin">
                   Diferencia: <span className="mono-font">{natData.margin.toLocaleString('es-PE')} votos</span>
@@ -607,6 +648,24 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+
+            {/* Doughnut Votes Distribution Card — second */}
+            <div className="glass-card doughnut-card">
+              <h3 className="card-title">
+                {isExtrap ? 'Distribución de Votos Proyectados' : 'Distribución de Votos Válidos'}
+              </h3>
+              <div className="doughnut-canvas-container">
+                <canvas ref={nationalChartRef}></canvas>
+                <div className="doughnut-center-lbl">
+                  <span className="mono-font">
+                    {isExtrap ? '100.000%' : `${nat.actsPct.toFixed(3)}%`}
+                  </span>
+                  <span className="center-sub">
+                    {isExtrap ? 'Actas Proy.' : 'Actas'}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -618,7 +677,7 @@ export default function Dashboard() {
             <input 
               type="text" 
               className="search-input" 
-              placeholder="Buscar departamento o código..." 
+              placeholder={currentTab === 'peru' ? 'Buscar departamento o código...' : 'Buscar continente o código...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoComplete="off" 
