@@ -240,11 +240,8 @@ async function fetchItemData(idAmbito, item, existingSeriesMap) {
   };
 }
 
-export async function GET(request) {
+export async function GET() {
   try {
-    // Detect if this is a cron invocation
-    const isCron = request.headers.get('x-vercel-cron') === '1'
-                || request.headers.get('authorization') === `Bearer ${process.env.CRON_SECRET}`;
 
     // 1. Load existing database (Vercel KV or Local File)
     let dbData = { regiones: [], extranjero: [], latest: {}, projections_history: [] };
@@ -477,14 +474,10 @@ export async function GET(request) {
       }
     }
     
-    // CDN cache: 60s (reduced from 300s), cron calls bypass CDN
-    const cacheControl = isCron
-      ? 'no-store'
-      : 's-maxage=60, stale-while-revalidate=30';
-
+    // CDN cache: 60s (reduced from original 300s)
     return NextResponse.json(combined, {
       headers: {
-        'Cache-Control': cacheControl,
+        'Cache-Control': 's-maxage=60, stale-while-revalidate=30',
         'Access-Control-Allow-Origin': '*'
       }
     });
