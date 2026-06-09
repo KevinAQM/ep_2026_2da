@@ -4,12 +4,15 @@ import path from 'path';
 
 // Load @vercel/kv conditionally if env variables are available
 let kv = null;
-if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
+if (kvUrl && kvToken) {
   try {
     const { createClient } = require('@vercel/kv');
     kv = createClient({
-      url: process.env.KV_REST_API_URL,
-      token: process.env.KV_REST_API_TOKEN,
+      url: kvUrl,
+      token: kvToken,
     });
     console.log("Initialized Vercel KV Client successfully.");
   } catch (e) {
