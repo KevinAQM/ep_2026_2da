@@ -2,23 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-// Load @vercel/kv conditionally if env variables are available
-let kv = null;
-const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+import { kv, getElectionData } from '../../lib/db';
 
-if (kvUrl && kvToken) {
-  try {
-    const { createClient } = require('@vercel/kv');
-    kv = createClient({
-      url: kvUrl,
-      token: kvToken,
-    });
-    console.log("Initialized Vercel KV Client successfully.");
-  } catch (e) {
-    console.error("Failed to initialize Vercel KV client:", e);
-  }
-}
 
 const BASE_URL = "https://resultadosegundavuelta.onpe.gob.pe/presentacion-backend";
 
@@ -240,43 +225,18 @@ async function fetchItemData(idAmbito, item, existingSeriesMap) {
   };
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get('secret');
+    const expectedSecret = process.env.API_SECRET_TOKEN;
 
-    // 1. Load existing database (Vercel KV or Local File)
-    let dbData = { regiones: [], extranjero: [], latest: {}, projections_history: [] };
-    let loadedFromKV = false;
-    
-    if (kv) {
-      try {
-        const stored = await kv.get('election_data');
-        if (stored && typeof stored === 'object') {
-          dbData = stored;
-          loadedFromKV = true;
-          console.log("Loaded existing data from Vercel KV.");
-        }
-      } catch (e) {
-        console.error("Error fetching from Vercel KV:", e);
-      }
+    if (!expectedSecret || secret !== expectedSecret) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
-    
-    if (!loadedFromKV) {
-      try {
-        const filePath = path.join(process.cwd(), 'data.json');
-        if (fs.existsSync(filePath)) {
-          const fileContent = fs.readFileSync(filePath, 'utf-8');
-          dbData = JSON.parse(fileContent);
-          console.log("Loaded existing data from local data.json.");
-        }
-      } catch (e) {
-        console.error("Error reading local data.json:", e);
-      }
-    }
-    
-    // Ensure lists are present
-    if (!dbData.regiones) dbData.regiones = [];
-    if (!dbData.extranjero) dbData.extranjero = [];
-    if (!dbData.projections_history) dbData.projections_history = [];
+
+    // 1. Load existing database
+    const dbData = await getElectionData();
     
     // Create map of existing series
     const existingSeriesMap = {};
@@ -474,10 +434,10 @@ export async function GET() {
       }
     }
     
-    // CDN cache: 60s (reduced from original 300s)
+    // Disable cache for cron updates
     return NextResponse.json(combined, {
       headers: {
-        'Cache-Control': 's-maxage=60, stale-while-revalidate=30',
+        'Cache-Control': 'no-store, max-age=0, must-revalidate',
         'Access-Control-Allow-Origin': '*'
       }
     });
