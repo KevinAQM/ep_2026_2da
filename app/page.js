@@ -344,12 +344,11 @@ export default function Dashboard() {
     };
   }, [selectedRegion]);
 
-  // Tab switching resetting view mode back to current
+  // Tab switching — preserves current view mode selection
   const handleTabChange = (tab) => {
     if (currentTab === tab) return;
     setCurrentTab(tab);
     setSearchQuery('');
-    setCurrentViewMode('current');
   };
 
   // Toggle direction of sort icon path
@@ -466,8 +465,11 @@ export default function Dashboard() {
         <div className="container header-inner">
           <div className="brand">
             <div className="brand-avatar" aria-hidden="true">
-              <span className="dot-orange"></span>
-              <span className="dot-green"></span>
+              <img
+                src="/FullLogo_Transparent.png"
+                alt="QM Solutions Logo"
+                className="brand-logo"
+              />
             </div>
             <div className="brand-text">
               <h1>Elecciones Presidenciales 2026 - Segunda Vuelta</h1>
@@ -580,7 +582,7 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div className="badge-margin">
-                  Diferencia: <span className="mono-font">{natData.margin.toLocaleString('es-PE')} votos</span>
+                  Diferencia: <span className="mono-font">{natData.margin.toLocaleString('es-PE')}</span> votos (<span className="mono-font">{natData.marginPct.toFixed(3)}%</span>) a favor de <span className={natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'} style={{ fontWeight: 800 }}>{natData.leader}</span>
                 </div>
               </div>
               
@@ -622,17 +624,6 @@ export default function Dashboard() {
                 <div className="split-bar">
                   <div className="bar-fill orange-bg" style={{ width: `${natData.keikoPct}%` }}></div>
                   <div className="bar-fill green-bg" style={{ width: `${natData.robertoPct}%` }}></div>
-                </div>
-              </div>
-              
-              <div className="widget-row">
-                <div className="widget-leader">
-                  <span className="widget-lbl">Tendencia:</span>
-                  <span className="widget-val">{natData.leader}</span>
-                </div>
-                <div className="widget-margin-pct">
-                  <span className="widget-lbl">Brecha:</span>
-                  <span className="widget-val mono-font">{natData.marginPct.toFixed(3)}%</span>
                 </div>
               </div>
 
@@ -839,7 +830,7 @@ export default function Dashboard() {
         <div className="container footer-inner">
           <p>Dashboard de Análisis Independiente de Datos Electorales. Segunda Vuelta Presidencial Perú 2026.</p>
           <p>Los datos mostrados provienen directamente de los servidores oficiales de la <strong>Oficina Nacional de Procesos Electorales (ONPE)</strong>.</p>
-          <p>&copy; 2026 QM Solutions - Data Analytics Department. Todos los derechos reservados.</p>
+          <p className="footer-copyright">&copy; 2026 QM Solutions - Data Analytics Department. Todos los derechos reservados.</p>
         </div>
       </footer>
     </>
