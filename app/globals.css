@@ -337,7 +337,7 @@ main {
 
 /* Metrics comparison card */
 .metrics-card {
-  padding: 32px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -437,6 +437,10 @@ main {
   font-weight: 900;
   font-size: 18px;
   color: #000;
+  object-fit: contain;
+  background-color: #ffffff;
+  padding: 3px;
+  border: 1px solid var(--border-color);
 }
 
 .meta-names .name {
@@ -1044,7 +1048,7 @@ footer {
 
 .footer-copyright {
   font-weight: 700;
-  background: linear-gradient(90deg, #FA0A0A 0%, #0F96FA 100%);
+  background: linear-gradient(90deg, #0F96FA 0%, #FA0A0A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

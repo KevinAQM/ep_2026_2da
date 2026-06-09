@@ -578,7 +578,7 @@ export default function Dashboard() {
                 {/* Keiko Fujimori */}
                 <div className="cand-panel cand-keiko">
                   <div className="cand-meta">
-                    <div className="avatar orange-bg" aria-label="K">K</div>
+                    <img className="avatar" src="/k.png" alt="Fuerza Popular Logo" />
                     <div className="meta-names">
                       <span className="name">Keiko Fujimori</span>
                       <span className="party">Fuerza Popular</span>
@@ -593,7 +593,7 @@ export default function Dashboard() {
                 {/* Roberto Sanchez */}
                 <div className="cand-panel cand-roberto">
                   <div className="cand-meta">
-                    <div className="avatar green-bg" aria-label="R">R</div>
+                    <img className="avatar" src="/jp.png" alt="Juntos por el Perú Logo" />
                     <div className="meta-names">
                       <span className="name">Roberto Sánchez</span>
                       <span className="party">Juntos por el Perú</span>
