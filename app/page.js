@@ -489,6 +489,25 @@ export default function Dashboard() {
       {/* MAIN CONTAINER */}
       <main className="container">
         
+        {/* INTERACTION CONTROL BAR */}
+        <section className="controls-section" aria-label="Controles de vista">
+          <div className="btn-group-toggle">
+            <button 
+              className={`toggle-btn ${currentViewMode === 'current' ? 'active' : ''}`}
+              onClick={() => setCurrentViewMode('current')}
+            >
+              Votos Oficiales ONPE
+            </button>
+            <button 
+              id="btn-view-extrapolated"
+              className={`toggle-btn ${currentViewMode === 'extrapolated' ? 'active' : ''}`}
+              onClick={() => setCurrentViewMode('extrapolated')}
+            >
+              Proyección Estimada
+            </button>
+          </div>
+        </section>
+
         {/* MAIN TAB NAVIGATION */}
         <div className="tabs-wrapper">
           <div className="tabs-container">
@@ -513,38 +532,6 @@ export default function Dashboard() {
         
         {/* HERO SECTION: NATIONAL SUMMARY */}
         <section className="summary-section">
-          <h2 className="section-title">
-            {currentTab === 'peru' ? (
-              <>
-                <svg className="title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-                {isExtrap ? 'Proyección Nacional al 100% — 25 Regiones' : 'Votos Oficiales ONPE — Territorio Nacional'}
-              </>
-            ) : (
-              <>
-                <svg className="title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                {isExtrap ? 'Proyección Exterior al 100% — 5 Continentes' : 'Votos Oficiales ONPE — Voto Exterior'}
-              </>
-            )}
-          </h2>
-          
-          {/* INTERACTION CONTROL BAR */}
-          <section className="controls-section" aria-label="Controles de vista">
-            <div className="btn-group-toggle">
-              <button 
-                className={`toggle-btn ${currentViewMode === 'current' ? 'active' : ''}`}
-                onClick={() => setCurrentViewMode('current')}
-              >
-                Votos Oficiales ONPE
-              </button>
-              <button 
-                id="btn-view-extrapolated"
-                className={`toggle-btn ${currentViewMode === 'extrapolated' ? 'active' : ''}`}
-                onClick={() => setCurrentViewMode('extrapolated')}
-              >
-                Proyección Estimada
-              </button>
-            </div>
-          </section>
 
           {/* EXTRAPOLATION EXPLANATION BOX */}
           <div id="extrapolation-info-box" className={`info-box-container ${isExtrap ? 'show' : ''}`}>
@@ -582,7 +569,7 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div className="badge-margin">
-                  Diferencia: <span className="mono-font">{natData.margin.toLocaleString('es-PE')}</span> votos (<span className="mono-font">{natData.marginPct.toFixed(3)}%</span>) a favor de <span className={natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'} style={{ fontWeight: 800 }}>{natData.leader}</span>
+                  Diferencia: <span className={`mono-font ${natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'}`} style={{ fontWeight: 800 }}>{natData.margin.toLocaleString('es-PE')}</span> <span className={natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'}>votos</span> (<span className={`mono-font ${natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'}`} style={{ fontWeight: 800 }}>{natData.marginPct.toFixed(3)}%</span>) a favor de <span className={natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'} style={{ fontWeight: 800 }}>{natData.leader}</span>
                 </div>
               </div>
               
