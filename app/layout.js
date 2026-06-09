@@ -24,6 +24,19 @@ export const metadata = {
   description: "Resultados oficiales ONPE y proyecciones estadísticas al 100% de actas para las elecciones presidenciales de segunda vuelta en Perú 2026. Voto nacional y exterior en tiempo real.",
   keywords: "elecciones 2026, segunda vuelta peru, ONPE resultados, extrapolacion electoral, Keiko Fujimori, Roberto Sanchez, proyeccion electoral",
   authors: [{ name: "QM Solutions - Data Analytics Department" }],
+  openGraph: {
+    title: "Elecciones Presidenciales 2026 - Segunda Vuelta",
+    description: "Resultados oficiales ONPE y proyecciones estadísticas al 100% de actas.",
+    url: "https://ep2026.vercel.app",
+    siteName: "Elecciones Perú 2026",
+    locale: "es_PE",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Elecciones Presidenciales 2026 - Segunda Vuelta",
+    description: "Resultados y Proyecciones Electorales al 100%",
+  },
 };
 
 export default function RootLayout({ children }) {
