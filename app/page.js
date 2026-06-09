@@ -486,49 +486,54 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* MAIN CONTAINER */}
-      <main className="container">
-        
-        {/* INTERACTION CONTROL BAR */}
-        <section className="controls-section" aria-label="Controles de vista">
-          <div className="btn-group-toggle">
-            <button 
-              className={`toggle-btn ${currentViewMode === 'current' ? 'active' : ''}`}
-              onClick={() => setCurrentViewMode('current')}
-            >
-              Votos Oficiales ONPE
-            </button>
-            <button 
-              id="btn-view-extrapolated"
-              className={`toggle-btn ${currentViewMode === 'extrapolated' ? 'active' : ''}`}
-              onClick={() => setCurrentViewMode('extrapolated')}
-            >
-              Proyección Estimada
-            </button>
-          </div>
-        </section>
+      {/* STICKY BUTTONS BAR */}
+      <div className="sticky-buttons-bar">
+        <div className="container sticky-buttons-inner">
+          {/* INTERACTION CONTROL BAR */}
+          <section className="controls-section" aria-label="Controles de vista">
+            <div className="btn-group-toggle">
+              <button 
+                className={`toggle-btn ${currentViewMode === 'current' ? 'active' : ''}`}
+                onClick={() => setCurrentViewMode('current')}
+              >
+                Votos Oficiales ONPE
+              </button>
+              <button 
+                id="btn-view-extrapolated"
+                className={`toggle-btn ${currentViewMode === 'extrapolated' ? 'active' : ''}`}
+                onClick={() => setCurrentViewMode('extrapolated')}
+              >
+                Proyección Estimada
+              </button>
+            </div>
+          </section>
 
-        {/* MAIN TAB NAVIGATION */}
-        <div className="tabs-wrapper">
-          <div className="tabs-container">
-            <button 
-              className={`tab-btn ${currentTab === 'peru' ? 'active' : ''}`}
-              onClick={() => handleTabChange('peru')}
-              title="Ver votos de territorio nacional"
-            >
-              <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-              PERÚ (Voto Nacional)
-            </button>
-            <button 
-              className={`tab-btn ${currentTab === 'extranjero' ? 'active' : ''}`}
-              onClick={() => handleTabChange('extranjero')}
-              title="Ver votos del exterior por continente"
-            >
-              <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-              EXTRANJERO (Voto Exterior)
-            </button>
+          {/* MAIN TAB NAVIGATION */}
+          <div className="tabs-wrapper">
+            <div className="tabs-container">
+              <button 
+                className={`tab-btn ${currentTab === 'peru' ? 'active' : ''}`}
+                onClick={() => handleTabChange('peru')}
+                title="Ver votos de territorio nacional"
+              >
+                <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                PERÚ
+              </button>
+              <button 
+                className={`tab-btn ${currentTab === 'extranjero' ? 'active' : ''}`}
+                onClick={() => handleTabChange('extranjero')}
+                title="Ver votos del exterior por continente"
+              >
+                <svg className="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                EXTRANJERO
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* MAIN CONTAINER */}
+      <main className="container">
         
         {/* HERO SECTION: NATIONAL SUMMARY */}
         <section className="summary-section">
