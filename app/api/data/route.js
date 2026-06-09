@@ -129,12 +129,36 @@ async function fetchItemData(idAmbito, item, existingSeriesMap) {
     }
   }
   
-  // Extrapolation
-  const factor = actasPct > 0 ? (100.0 / actasPct) : 1.0;
-  const extrapKeiko = Math.round(keikoVotes * factor);
-  const extrapRoberto = Math.round(robertoVotes * factor);
-  
   const rSerie = existingSeriesMap[ubigeo] || [];
+  
+  // Rolling average projection using the last 10 updates (marginal trend)
+  const baseIdx = Math.max(0, rSerie.length - 10);
+  const basePoint = rSerie[baseIdx] || {};
+  const keikoBase = basePoint.kv || 0;
+  const robertoBase = basePoint.rv || 0;
+  
+  const deltaKeiko = keikoVotes - keikoBase;
+  const deltaRoberto = robertoVotes - robertoBase;
+  const deltaTotal = deltaKeiko + deltaRoberto;
+  
+  let shareKeiko = 0.5;
+  let shareRoberto = 0.5;
+  const currValid = keikoVotes + robertoVotes;
+  
+  if (deltaTotal > 0 && deltaKeiko >= 0 && deltaRoberto >= 0) {
+    shareKeiko = deltaKeiko / deltaTotal;
+    shareRoberto = deltaRoberto / deltaTotal;
+  } else if (currValid > 0) {
+    shareKeiko = keikoVotes / currValid;
+    shareRoberto = robertoVotes / currValid;
+  }
+  
+  const factor = actasPct > 0 ? (100.0 / actasPct) : 1.0;
+  const validEst = currValid * factor;
+  const remainingValidos = Math.max(0, validEst - currValid);
+  
+  const extrapKeiko = Math.round(keikoVotes + (remainingValidos * shareKeiko));
+  const extrapRoberto = Math.round(robertoVotes + (remainingValidos * shareRoberto));
   
   return {
     ubigeo,
@@ -316,7 +340,9 @@ export async function GET() {
         r.serie.push({
           a: parseFloat(rPct.toFixed(3)), // Roberto
           b: parseFloat(kPct.toFixed(3)), // Keiko
-          t: timeDisplay
+          t: timeDisplay,
+          kv: r.keiko_votos,
+          rv: r.roberto_votos
         });
       }
       
@@ -328,7 +354,9 @@ export async function GET() {
         r.serie.push({
           a: parseFloat(rPct.toFixed(3)), // Roberto
           b: parseFloat(kPct.toFixed(3)), // Keiko
-          t: timeDisplay
+          t: timeDisplay,
+          kv: r.keiko_votos,
+          rv: r.roberto_votos
         });
       }
     }

@@ -94,10 +94,36 @@ def fetch_ambito_data(base, id_ambito, items_list, existing_series_map):
                 
         curr_valid = keiko_votes + roberto_votes
         
-        # Extrapolation
+        r_serie = existing_series_map.get(ubigeo, [])
+        
+        # Rolling average projection using the last 10 updates (marginal trend)
+        n_points = len(r_serie)
+        base_idx = max(0, n_points - 10)
+        base_point = r_serie[base_idx] if n_points > 0 else {}
+        
+        keiko_base = base_point.get("kv", 0)
+        roberto_base = base_point.get("rv", 0)
+        
+        delta_keiko = keiko_votes - keiko_base
+        delta_roberto = roberto_votes - roberto_base
+        delta_total = delta_keiko + delta_roberto
+        
+        share_keiko = 0.5
+        share_roberto = 0.5
+        
+        if delta_total > 0 and delta_keiko >= 0 and delta_roberto >= 0:
+            share_keiko = delta_keiko / delta_total
+            share_roberto = delta_roberto / delta_total
+        elif curr_valid > 0:
+            share_keiko = keiko_votes / curr_valid
+            share_roberto = roberto_votes / curr_valid
+            
         factor = 100.0 / actas_pct if actas_pct > 0 else 1.0
-        extrap_keiko = round(keiko_votes * factor)
-        extrap_roberto = round(roberto_votes * factor)
+        valid_est = curr_valid * factor
+        remaining_valid = max(0, valid_est - curr_valid)
+        
+        extrap_keiko = round(keiko_votes + (remaining_valid * share_keiko))
+        extrap_roberto = round(roberto_votes + (remaining_valid * share_roberto))
         extrap_valid = extrap_keiko + extrap_roberto
         
         # Accumulates
@@ -108,8 +134,6 @@ def fetch_ambito_data(base, id_ambito, items_list, existing_series_map):
         sum_extrap_keiko += extrap_keiko
         sum_extrap_roberto += extrap_roberto
         sum_extrap_valid += extrap_valid
-        
-        r_serie = existing_series_map.get(ubigeo, [])
         
         record = {
             "ubigeo": ubigeo,
@@ -243,7 +267,9 @@ def main():
             r["serie"].append({
                 "a": round(r_pct, 3), # Roberto
                 "b": round(k_pct, 3), # Keiko
-                "t": time_display
+                "t": time_display,
+                "kv": r["keiko_votos"],
+                "rv": r["roberto_votos"]
             })
             
         # Append corresponding point to each continent's serie
@@ -254,7 +280,9 @@ def main():
             r["serie"].append({
                 "a": round(r_pct, 3), # Roberto
                 "b": round(k_pct, 3), # Keiko
-                "t": time_display
+                "t": time_display,
+                "kv": r["keiko_votos"],
+                "rv": r["roberto_votos"]
             })
             
         print(f"\nAppended new snapshot at {time_display} (Peru Acts: {pe_acts_pct:.3f}%, Extranjero Acts: {ex_acts_pct:.3f}%)")
