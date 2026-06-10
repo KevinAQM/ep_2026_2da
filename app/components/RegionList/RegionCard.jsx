@@ -22,14 +22,6 @@ export default function RegionCard({ r, isExtrap, onClick, style = {} }) {
         </span>
       </div>
       
-      <div className={`region-cand-line ${isKeikoLeading ? 'winner keiko-lead' : ''}`}>
-        <span>Keiko Fujimori</span>
-        <span className="mono-font">{kPct.toFixed(3)}%</span>
-      </div>
-      <div className="region-cand-subline">
-        <span className="mono-font">{(kVotes || 0).toLocaleString('es-PE')} votos</span>
-      </div>
-      
       <div className={`region-cand-line ${!isKeikoLeading ? 'winner roberto-lead' : ''}`}>
         <span>Roberto Sánchez</span>
         <span className="mono-font">{rPct.toFixed(3)}%</span>
@@ -38,10 +30,18 @@ export default function RegionCard({ r, isExtrap, onClick, style = {} }) {
         <span className="mono-font">{(rVotes || 0).toLocaleString('es-PE')} votos</span>
       </div>
       
+      <div className={`region-cand-line ${isKeikoLeading ? 'winner keiko-lead' : ''}`}>
+        <span>Keiko Fujimori</span>
+        <span className="mono-font">{kPct.toFixed(3)}%</span>
+      </div>
+      <div className="region-cand-subline">
+        <span className="mono-font">{(kVotes || 0).toLocaleString('es-PE')} votos</span>
+      </div>
+      
       <div className="progress-bar-wrapper" style={{ marginTop: '8px' }}>
         <div className="split-bar" style={{ height: '6px' }}>
-          <div className="bar-fill orange-bg" style={{ width: `${kPct}%` }}></div>
           <div className="bar-fill green-bg" style={{ width: `${rPct}%` }}></div>
+          <div className="bar-fill orange-bg" style={{ width: `${kPct}%` }}></div>
         </div>
       </div>
       

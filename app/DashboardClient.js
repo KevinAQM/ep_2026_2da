@@ -99,10 +99,6 @@ export default function DashboardClient({ initialData, rawData }) {
       let valA, valB;
       const isExtrap = currentViewMode === 'extrapolated';
       switch (sortKey) {
-        case 'name':
-          valA = a.nombre;
-          valB = b.nombre;
-          break;
         case 'acts':
           valA = a.actasContabilizadas;
           valB = b.actasContabilizadas;
@@ -119,9 +115,10 @@ export default function DashboardClient({ initialData, rawData }) {
           valA = isExtrap ? Math.abs(a.calc.kPctExtrap - a.calc.rPctExtrap) : Math.abs(a.calc.kPct - a.calc.rPct);
           valB = isExtrap ? Math.abs(b.calc.kPctExtrap - b.calc.rPctExtrap) : Math.abs(b.calc.kPct - b.calc.rPct);
           break;
+        case 'name':
         default:
-          valA = a.nombre;
-          valB = b.nombre;
+          const comp = a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
+          return sortDir === 'asc' ? comp : -comp;
       }
       if (valA < valB) return sortDir === 'asc' ? -1 : 1;
       if (valA > valB) return sortDir === 'asc' ? 1 : -1;
@@ -173,23 +170,26 @@ export default function DashboardClient({ initialData, rawData }) {
           onRegionClick={setModalUbigeo}
         />
         
-        <SearchBar 
-          currentTab={currentTab}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          sortKey={sortKey}
-          setSortKey={setSortKey}
-          sortDir={sortDir}
-          toggleSortDir={toggleSortDir}
-        />
+        {currentTab !== 'todos' && (
+          <>
+            <SearchBar 
+              currentTab={currentTab}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              sortKey={sortKey}
+              setSortKey={setSortKey}
+              sortDir={sortDir}
+              toggleSortDir={toggleSortDir}
+            />
 
-        
-        <RegionGrid 
-          sortedList={sortedList} 
-          searchQuery={searchQuery} 
-          isExtrap={isExtrap} 
-          onCardClick={setModalUbigeo} 
-        />
+            <RegionGrid 
+              sortedList={sortedList} 
+              searchQuery={searchQuery} 
+              isExtrap={isExtrap} 
+              onCardClick={setModalUbigeo} 
+            />
+          </>
+        )}
       </main>
 
       <Footer />

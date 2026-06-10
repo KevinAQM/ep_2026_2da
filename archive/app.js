@@ -296,10 +296,6 @@ function renderRegionsGrid() {
   filtered.sort((a, b) => {
     let valA, valB;
     switch (currentSortKey) {
-      case 'name':
-        valA = a.nombre;
-        valB = b.nombre;
-        break;
       case 'acts':
         valA = a.actasContabilizadas;
         valB = b.actasContabilizadas;
@@ -316,9 +312,10 @@ function renderRegionsGrid() {
         valA = isExtrap ? Math.abs(a.calc.kPctExtrap - a.calc.rPctExtrap) : Math.abs(a.calc.kPct - a.calc.rPct);
         valB = isExtrap ? Math.abs(b.calc.kPctExtrap - b.calc.rPctExtrap) : Math.abs(b.calc.kPct - b.calc.rPct);
         break;
+      case 'name':
       default:
-        valA = a.nombre;
-        valB = b.nombre;
+        const comp = a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
+        return currentSortDir === 'asc' ? comp : -comp;
     }
 
     if (valA < valB) return currentSortDir === 'asc' ? -1 : 1;
@@ -348,20 +345,20 @@ function renderRegionsGrid() {
           <span class="acts-badge">${r.actasContabilizadas.toFixed(3)}% actas</span>
         </div>
         
-        <div class="region-cand-line ${isKeikoLeading ? 'winner keiko-lead' : ''}">
-          <span>Keiko Fujimori</span>
-          <span class="mono-font">${kPct.toFixed(3)}%</span>
-        </div>
-        
         <div class="region-cand-line ${!isKeikoLeading ? 'winner roberto-lead' : ''}">
           <span>Roberto Sánchez</span>
           <span class="mono-font">${rPct.toFixed(3)}%</span>
         </div>
         
+        <div class="region-cand-line ${isKeikoLeading ? 'winner keiko-lead' : ''}">
+          <span>Keiko Fujimori</span>
+          <span class="mono-font">${kPct.toFixed(3)}%</span>
+        </div>
+        
         <div class="progress-bar-wrapper" style="margin-top: 8px;">
           <div class="split-bar" style="height: 6px;">
-            <div class="bar-fill orange-bg" style="width: ${kPct}%"></div>
             <div class="bar-fill green-bg" style="width: ${rPct}%"></div>
+            <div class="bar-fill orange-bg" style="width: ${kPct}%"></div>
           </div>
         </div>
         

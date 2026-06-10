@@ -52,26 +52,91 @@ export default function NationalSummary({
       const current = projectionsHistory[i];
       const previous = i > 0 ? projectionsHistory[i - 1] : null;
       
+      let keikoVotes = 0;
+      let robertoVotes = 0;
+      let keikoPct = 50.0;
+      let robertoPct = 50.0;
+      let actsPct = 0;
+      
+      let prevKeikoVotes = 0;
+      let prevRobertoVotes = 0;
+      let prevKeikoPct = 50.0;
+      let prevRobertoPct = 50.0;
+
+      if (currentTab === 'peru') {
+        keikoVotes = current.current_keiko;
+        robertoVotes = current.current_roberto;
+        keikoPct = current.current_keiko_pct;
+        robertoPct = current.current_roberto_pct;
+        actsPct = current.acts_pct;
+        
+        if (previous) {
+          prevKeikoVotes = previous.current_keiko;
+          prevRobertoVotes = previous.current_roberto;
+          prevKeikoPct = previous.current_keiko_pct;
+          prevRobertoPct = previous.current_roberto_pct;
+        }
+      } else if (currentTab === 'extranjero') {
+        keikoVotes = current.ex_current_keiko;
+        robertoVotes = current.ex_current_roberto;
+        actsPct = current.ex_acts_pct;
+        
+        const currentTotal = keikoVotes + robertoVotes;
+        keikoPct = currentTotal > 0 ? (keikoVotes / currentTotal * 100) : 50.0;
+        robertoPct = currentTotal > 0 ? (robertoVotes / currentTotal * 100) : 50.0;
+        
+        if (previous) {
+          prevKeikoVotes = previous.ex_current_keiko;
+          prevRobertoVotes = previous.ex_current_roberto;
+          const prevTotal = prevKeikoVotes + prevRobertoVotes;
+          prevKeikoPct = prevTotal > 0 ? (prevKeikoVotes / prevTotal * 100) : 50.0;
+          prevRobertoPct = prevTotal > 0 ? (prevRobertoVotes / prevTotal * 100) : 50.0;
+        }
+      } else { // todos
+        keikoVotes = current.current_keiko + current.ex_current_keiko;
+        robertoVotes = current.current_roberto + current.ex_current_roberto;
+        
+        const totalActsCombined = nat.totalActs || 1;
+        const totalActsPeru = regiones.reduce((acc, r) => acc + (r.totalActas || 0), 0);
+        const totalActsExtranjero = Math.max(0, totalActsCombined - totalActsPeru);
+        
+        const contabPeru = (current.acts_pct / 100) * totalActsPeru;
+        const contabExtranjero = (current.ex_acts_pct / 100) * totalActsExtranjero;
+        actsPct = ((contabPeru + contabExtranjero) / totalActsCombined) * 100;
+        
+        const currentTotal = keikoVotes + robertoVotes;
+        keikoPct = currentTotal > 0 ? (keikoVotes / currentTotal * 100) : 50.0;
+        robertoPct = currentTotal > 0 ? (robertoVotes / currentTotal * 100) : 50.0;
+        
+        if (previous) {
+          prevKeikoVotes = previous.current_keiko + previous.ex_current_keiko;
+          prevRobertoVotes = previous.current_roberto + previous.ex_current_roberto;
+          const prevTotal = prevKeikoVotes + prevRobertoVotes;
+          prevKeikoPct = prevTotal > 0 ? (prevKeikoVotes / prevTotal * 100) : 50.0;
+          prevRobertoPct = prevTotal > 0 ? (prevRobertoVotes / prevTotal * 100) : 50.0;
+        }
+      }
+      
       let keikoVotesVar = 0;
       let robertoVotesVar = 0;
       let keikoPctDiff = 0;
       let robertoPctDiff = 0;
       
       if (previous) {
-        keikoVotesVar = current.current_keiko - previous.current_keiko;
-        robertoVotesVar = current.current_roberto - previous.current_roberto;
-        keikoPctDiff = current.current_keiko_pct - previous.current_keiko_pct;
-        robertoPctDiff = current.current_roberto_pct - previous.current_roberto_pct;
+        keikoVotesVar = keikoVotes - prevKeikoVotes;
+        robertoVotesVar = robertoVotes - prevRobertoVotes;
+        keikoPctDiff = keikoPct - prevKeikoPct;
+        robertoPctDiff = robertoPct - prevRobertoPct;
       }
       
       list.push({
         timestamp: current.timestamp,
         timeDisplay: current.time_display,
-        actsPct: current.acts_pct,
-        keikoVotes: current.current_keiko,
-        robertoVotes: current.current_roberto,
-        keikoPct: current.current_keiko_pct,
-        robertoPct: current.current_roberto_pct,
+        actsPct,
+        keikoVotes,
+        robertoVotes,
+        keikoPct,
+        robertoPct,
         keikoVotesVar,
         robertoVotesVar,
         keikoPctDiff,
@@ -158,21 +223,6 @@ export default function NationalSummary({
 
           {/* Candidates Head to Head */}
           <div className="candidate-vs-container">
-            {/* Keiko Fujimori */}
-            <div className="cand-panel cand-keiko">
-              <div className="cand-meta">
-                <img className="avatar" src="/k.png" alt="Fuerza Popular Logo" />
-                <div className="meta-names">
-                  <span className="name">Keiko Fujimori</span>
-                  <span className="party">Fuerza Popular</span>
-                </div>
-              </div>
-              <div className="cand-vals">
-                <span className="percentage orange-text mono-font">{natData.keikoPct.toFixed(3)}%</span>
-                <span className="votes mono-font">{natData.keiko.toLocaleString('es-PE')} votos</span>
-              </div>
-            </div>
-
             {/* Roberto Sanchez */}
             <div className="cand-panel cand-roberto">
               <div className="cand-meta">
@@ -187,13 +237,28 @@ export default function NationalSummary({
                 <span className="votes mono-font">{natData.roberto.toLocaleString('es-PE')} votos</span>
               </div>
             </div>
+
+            {/* Keiko Fujimori */}
+            <div className="cand-panel cand-keiko">
+              <div className="cand-meta">
+                <img className="avatar" src="/k.png" alt="Fuerza Popular Logo" />
+                <div className="meta-names">
+                  <span className="name">Keiko Fujimori</span>
+                  <span className="party">Fuerza Popular</span>
+                </div>
+              </div>
+              <div className="cand-vals">
+                <span className="percentage orange-text mono-font">{natData.keikoPct.toFixed(3)}%</span>
+                <span className="votes mono-font">{natData.keiko.toLocaleString('es-PE')} votos</span>
+              </div>
+            </div>
           </div>
 
           {/* Split Progress Bar */}
           <div className="progress-bar-wrapper">
             <div className="split-bar">
-              <div className="bar-fill orange-bg" style={{ width: `${natData.keikoPct}%` }}></div>
               <div className="bar-fill green-bg" style={{ width: `${natData.robertoPct}%` }}></div>
+              <div className="bar-fill orange-bg" style={{ width: `${natData.keikoPct}%` }}></div>
             </div>
           </div>
 
@@ -269,14 +334,22 @@ export default function NationalSummary({
         </div>
 
         {/* Historial de últimas 10 actualizaciones */}
-        {!isExtrap && currentTab === 'peru' && (
+        {!isExtrap && (currentTab === 'peru' || currentTab === 'extranjero' || currentTab === 'todos') && (
           <div className="glass-card updates-history-card">
             <div className="metrics-title-group" style={{ marginBottom: '16px' }}>
               <h3 style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '0.05em', color: 'var(--text-secondary)', textTransform: 'uppercase', margin: 0 }}>
-                Historial de Actualizaciones (ONPE Nacional)
+                {currentTab === 'peru' 
+                  ? 'Historial de Actualizaciones (ONPE Nacional)' 
+                  : currentTab === 'extranjero'
+                    ? 'Historial de Actualizaciones (ONPE Extranjero)'
+                    : 'Historial de Actualizaciones (ONPE Consolidado)'}
               </h3>
               <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', margin: 0 }}>
-                Variación de votos oficiales absolutos y porcentaje acumulado de cada candidato en territorio nacional
+                {currentTab === 'peru'
+                  ? 'Variación de votos oficiales absolutos y porcentaje acumulado de cada candidato en territorio nacional'
+                  : currentTab === 'extranjero'
+                    ? 'Variación de votos oficiales absolutos y porcentaje acumulado de cada candidato en el extranjero'
+                    : 'Variación de votos oficiales absolutos y porcentaje acumulado de cada candidato a nivel consolidado (Nacional + Extranjero)'}
               </p>
             </div>
             
