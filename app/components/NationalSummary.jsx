@@ -23,20 +23,20 @@ const activeMiniTabStyle = {
   boxShadow: '0 2px 8px rgba(236, 72, 153, 0.3)',
 };
 
-export default function NationalSummary({ 
-  isExtrap, 
-  currentTab, 
-  nat, 
-  natData, 
-  regiones, 
-  projectionsHistory, 
-  onRegionClick 
+export default function NationalSummary({
+  isExtrap,
+  currentTab,
+  nat,
+  natData,
+  regiones,
+  projectionsHistory,
+  onRegionClick
 }) {
   const [activeVisualTab, setActiveVisualTab] = useState('doughnut');
 
-  // Automatically reset map tab if switching to extranjero
+  // Automatically reset map tab if switching to foreign or todos
   useEffect(() => {
-    if (currentTab === 'extranjero' && activeVisualTab === 'map') {
+    if (currentTab !== 'peru' && activeVisualTab === 'map') {
       setActiveVisualTab('doughnut');
     }
   }, [currentTab, activeVisualTab]);
@@ -53,7 +53,7 @@ export default function NationalSummary({
           </div>
         </div>
       </div>
-      
+
       <div className="national-layout">
         {/* Comparison Statistics Card — first */}
         <div className="glass-card metrics-card">
@@ -62,27 +62,35 @@ export default function NationalSummary({
               <h3>
                 {isExtrap
                   ? (currentTab === 'peru'
-                      ? 'Proyección al 100% de Actas — Territorio Nacional'
-                      : 'Proyección al 100% de Actas — Voto Exterior')
+                    ? 'Proyección al 100% de Actas — Territorio Nacional'
+                    : currentTab === 'extranjero'
+                      ? 'Proyección al 100% de Actas — Voto Exterior'
+                      : 'Proyección al 100% de Actas — Consolidado General')
                   : (currentTab === 'peru'
-                      ? 'Resultados Oficiales ONPE — Territorio Nacional'
-                      : 'Resultados Oficiales ONPE — Voto Exterior')}
+                    ? 'Resultados Oficiales ONPE — Territorio Nacional'
+                    : currentTab === 'extranjero'
+                      ? 'Resultados Oficiales ONPE — Voto Exterior'
+                      : 'Resultados Oficiales ONPE — Consolidado General')}
               </h3>
               <p>
                 {isExtrap
                   ? (currentTab === 'peru'
-                      ? 'Estimación ponderada por región al 100% de actas escrutadas'
-                      : 'Estimación ponderada por continente al 100% de actas escrutadas')
+                    ? 'Estimación ponderada por región al 100% de actas escrutadas'
+                    : currentTab === 'extranjero'
+                      ? 'Estimación ponderada por continente al 100% de actas escrutadas'
+                      : 'Estimación consolidada al 100% de actas escrutadas (Nacional + Exterior)')
                   : (currentTab === 'peru'
-                      ? 'Votos válidos contabilizados oficialmente por la ONPE — 25 regiones'
-                      : 'Votos válidos contabilizados oficialmente por la ONPE — 5 continentes')}
+                    ? 'Votos válidos contabilizados oficialmente por la ONPE — 25 regiones'
+                    : currentTab === 'extranjero'
+                      ? 'Votos válidos contabilizados oficialmente por la ONPE — 5 continentes'
+                      : 'Votos válidos contabilizados oficialmente por la ONPE — Nacional + Exterior')}
               </p>
             </div>
             <div className="badge-margin">
               Diferencia: <span className={`mono-font ${natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'}`} style={{ fontWeight: 800 }}>{natData.margin.toLocaleString('es-PE')}</span> <span className={natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'}>votos</span> (<span className={`mono-font ${natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'}`} style={{ fontWeight: 800 }}>{natData.marginPct.toFixed(3)}%</span>) a favor de <span className={natData.leader === 'Keiko Fujimori' ? 'orange-text' : 'green-text'} style={{ fontWeight: 800 }}>{natData.leader}</span>
             </div>
           </div>
-          
+
           {/* Candidates Head to Head */}
           <div className="candidate-vs-container">
             {/* Keiko Fujimori */}
@@ -99,7 +107,7 @@ export default function NationalSummary({
                 <span className="votes mono-font">{natData.keiko.toLocaleString('es-PE')} votos</span>
               </div>
             </div>
-            
+
             {/* Roberto Sanchez */}
             <div className="cand-panel cand-roberto">
               <div className="cand-meta">
@@ -115,7 +123,7 @@ export default function NationalSummary({
               </div>
             </div>
           </div>
-          
+
           {/* Split Progress Bar */}
           <div className="progress-bar-wrapper">
             <div className="split-bar">
@@ -137,11 +145,13 @@ export default function NationalSummary({
           </div>
 
           {/* Non-valid votes breakdown */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '20px', borderTop: '1px dashed var(--border-color)', paddingTop: '12px' }}>
-            <span>Votos en Blanco: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.blank || 0).toLocaleString('es-PE')}</strong></span>
-            <span>Votos Nulos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.null || 0).toLocaleString('es-PE')}</strong></span>
-            <span>Participación Est.: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.emitidos || 0).toLocaleString('es-PE')} emitidos</strong></span>
-          </div>
+          {!isExtrap && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '20px', borderTop: '1px dashed var(--border-color)', paddingTop: '12px' }}>
+              <span>Votos en Blanco: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.blank || 0).toLocaleString('es-PE')}</strong></span>
+              <span>Votos Nulos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.null || 0).toLocaleString('es-PE')}</strong></span>
+              <span>Votos Emitidos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.emitidos || 0).toLocaleString('es-PE')}</strong></span>
+            </div>
+          )}
         </div>
 
         {/* Visualizer Selector Card — second */}
@@ -152,13 +162,13 @@ export default function NationalSummary({
                 Visualización
               </h3>
               <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', padding: '2px', borderRadius: '8px' }}>
-                <button 
+                <button
                   onClick={() => setActiveVisualTab('doughnut')}
                   style={{ ...miniTabStyle, ...(activeVisualTab === 'doughnut' ? activeMiniTabStyle : {}) }}
                 >
                   Rosca
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveVisualTab('map')}
                   style={{ ...miniTabStyle, ...(activeVisualTab === 'map' ? activeMiniTabStyle : {}) }}
                 >
@@ -186,7 +196,7 @@ export default function NationalSummary({
                 </div>
               </div>
             )}
-            
+
             {activeVisualTab === 'map' && currentTab === 'peru' && (
               <PeruMap regiones={regiones} isExtrap={isExtrap} onRegionClick={onRegionClick} />
             )}

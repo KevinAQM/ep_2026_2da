@@ -40,7 +40,7 @@ export default function DetailModal({ selectedRegion, currentTab, isExtrap, onCl
           <div className="modal-title-wrap">
             <h2>{selectedRegion.nombre}</h2>
             <span className="mono-font">
-              {currentTab === 'peru' ? `Ubigeo: ${selectedRegion.ubigeo}` : `Código: ${selectedRegion.ubigeo}`}
+              {selectedRegion.ubigeo.startsWith('9') ? `Código: ${selectedRegion.ubigeo}` : `Ubigeo: ${selectedRegion.ubigeo}`}
             </span>
           </div>
           <form method="dialog">

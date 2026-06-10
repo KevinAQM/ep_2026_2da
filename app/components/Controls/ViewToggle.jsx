@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconPeru, IconExtranjero } from '../ui/Icons';
+import { IconPeru, IconExtranjero, IconTodos } from '../ui/Icons';
 
 export default function ViewToggle({ 
   currentViewMode, 
@@ -35,6 +35,14 @@ export default function ViewToggle({
         {/* MAIN TAB NAVIGATION */}
         <div className="tabs-wrapper">
           <div className="tabs-container">
+            <button 
+              className={`tab-btn ${currentTab === 'todos' ? 'active' : ''}`}
+              onClick={() => handleTabChange('todos')}
+              title="Ver consolidado total (Nacional + Exterior)"
+            >
+              <IconTodos className="tab-icon" />
+              TODOS
+            </button>
             <button 
               className={`tab-btn ${currentTab === 'peru' ? 'active' : ''}`}
               onClick={() => handleTabChange('peru')}

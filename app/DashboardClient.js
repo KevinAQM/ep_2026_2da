@@ -22,7 +22,7 @@ export default function DashboardClient({ initialData, rawData }) {
   const [error, setError] = useState(false);
   
   // Dashboard navigation states
-  const [currentTab, setCurrentTab] = useState('peru'); // 'peru' or 'extranjero'
+  const [currentTab, setCurrentTab] = useState('todos'); // 'todos', 'peru' or 'extranjero'
   const [currentViewMode, setCurrentViewMode] = useState('current'); // 'current' or 'extrapolated'
   const [searchQuery, setSearchQuery] = useState('');
   const [sortKey, setSortKey] = useState('name');
@@ -83,7 +83,10 @@ export default function DashboardClient({ initialData, rawData }) {
   }
 
   // Active list based on tab
-  const activeList = currentTab === 'peru' ? processedData.regiones : processedData.extranjero;
+  const activeList = 
+    currentTab === 'peru' ? processedData.regiones :
+    currentTab === 'extranjero' ? processedData.extranjero :
+    processedData.todos || [];
   
   // Filter & Sort using useMemo for performance
   const sortedList = useMemo(() => {
@@ -133,7 +136,10 @@ export default function DashboardClient({ initialData, rawData }) {
   // Find modal region detailed data
   const selectedRegion = useMemo(() => {
     if (!modalUbigeo || !processedData) return null;
-    const list = currentTab === 'peru' ? processedData.regiones : processedData.extranjero;
+    const list = 
+      currentTab === 'peru' ? processedData.regiones :
+      currentTab === 'extranjero' ? processedData.extranjero :
+      processedData.todos || [];
     return list.find(r => r.ubigeo === modalUbigeo) || null;
   }, [modalUbigeo, processedData, currentTab]);
 

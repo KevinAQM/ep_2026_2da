@@ -47,3 +47,12 @@ export const IconClose = ({ className = '', size = 20, ...props }) => (
     <path d="M18 6 6 18M6 6l12 12"/>
   </svg>
 );
+
+export const IconTodos = ({ className = '', size = 16, ...props }) => (
+  <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+    <line x1="9" y1="9" x2="15" y2="9"/>
+    <line x1="9" y1="13" x2="15" y2="13"/>
+    <line x1="9" y1="17" x2="15" y2="17"/>
+  </svg>
+);

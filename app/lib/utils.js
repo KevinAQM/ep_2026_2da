@@ -92,13 +92,20 @@ export function processData(raw) {
   if (!raw) return null;
   const peRes = computeMetricsForList(raw.regiones || []);
   const exRes = computeMetricsForList(raw.extranjero || []);
+  
+  // Concatenate both regions and foreign continents to calculate direct totals
+  const allItems = [...(raw.regiones || []), ...(raw.extranjero || [])];
+  const toRes = computeMetricsForList(allItems);
+
   return {
     ...raw,
     regiones: peRes.processed,
     extranjero: exRes.processed,
+    todos: toRes.processed,
     national: {
       peru: peRes.national,
-      extranjero: exRes.national
+      extranjero: exRes.national,
+      todos: toRes.national
     }
   };
 }
