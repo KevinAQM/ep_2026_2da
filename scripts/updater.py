@@ -232,8 +232,9 @@ def main():
     
     # Load existing database
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_json_path = os.path.join(script_dir, "data.json")
-    data_js_path = os.path.join(script_dir, "data.js")
+    root_dir = os.path.abspath(os.path.join(script_dir, ".."))
+    data_json_path = os.path.join(root_dir, "data.json")
+    data_js_path = os.path.join(root_dir, "data.js")
     
     db_data = {"regiones": [], "extranjero": [], "latest": {}, "projections_history": []}
     if os.path.exists(data_json_path):
@@ -287,7 +288,7 @@ def main():
     history = db_data["projections_history"]
     should_append_peru = True
     should_append_extra = True
-
+ 
     if len(history) > 0:
         last = history[-1]
         # Check Peru progress
@@ -362,7 +363,7 @@ def main():
         "projections_history": history
     }
     
-    # Save files
+    # Save files to project root
     with open(data_json_path, "w", encoding="utf-8") as f:
         json.dump(combined, f, indent=2, ensure_ascii=False)
     print(f"Saved database to {data_json_path}")

@@ -1255,3 +1255,134 @@ footer {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
 }
+
+/* Updates History Widget Styles */
+.updates-history-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 900px) {
+  .updates-history-card {
+    grid-column: 1 / -1;
+  }
+}
+
+.updates-list-container {
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-top: 16px;
+}
+
+.update-item {
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 0;
+}
+
+.update-item:first-child {
+  padding-top: 0;
+}
+
+.update-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.update-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.update-time-badge {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-family: var(--font-body);
+}
+
+.update-progress-badge {
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.update-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.update-grid-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border-color);
+  margin-bottom: 4px;
+}
+
+.update-grid-row {
+  font-size: 13px;
+  padding: 6px 0;
+}
+
+.candidate-name-col {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.candidate-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.keiko-dot {
+  background-color: var(--color-keiko);
+  box-shadow: 0 0 6px rgba(255, 118, 59, 0.5);
+}
+
+.roberto-dot {
+  background-color: var(--color-roberto);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+}
+
+.votes-col {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.pct-col {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.diff-col {
+  font-family: var(--font-mono);
+  font-weight: 800;
+}
+
+.diff-positive {
+  color: #10b981;
+}
+
+.diff-negative {
+  color: #ef4444;
+}
+
+.diff-neutral {
+  color: var(--text-muted);
+}
+

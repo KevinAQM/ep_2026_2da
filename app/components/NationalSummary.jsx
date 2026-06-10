@@ -41,6 +41,71 @@ export default function NationalSummary({
     }
   }, [currentTab, activeVisualTab]);
 
+  const getUpdatesHistory = () => {
+    if (!projectionsHistory || projectionsHistory.length === 0) return [];
+    
+    const N = projectionsHistory.length;
+    const count = Math.min(10, N);
+    const list = [];
+    
+    for (let i = N - 1; i >= N - count; i--) {
+      const current = projectionsHistory[i];
+      const previous = i > 0 ? projectionsHistory[i - 1] : null;
+      
+      let keikoVotesVar = 0;
+      let robertoVotesVar = 0;
+      let keikoPctDiff = 0;
+      let robertoPctDiff = 0;
+      
+      if (previous) {
+        keikoVotesVar = current.current_keiko - previous.current_keiko;
+        robertoVotesVar = current.current_roberto - previous.current_roberto;
+        keikoPctDiff = current.current_keiko_pct - previous.current_keiko_pct;
+        robertoPctDiff = current.current_roberto_pct - previous.current_roberto_pct;
+      }
+      
+      list.push({
+        timestamp: current.timestamp,
+        timeDisplay: current.time_display,
+        actsPct: current.acts_pct,
+        keikoVotes: current.current_keiko,
+        robertoVotes: current.current_roberto,
+        keikoPct: current.current_keiko_pct,
+        robertoPct: current.current_roberto_pct,
+        keikoVotesVar,
+        robertoVotesVar,
+        keikoPctDiff,
+        robertoPctDiff
+      });
+    }
+    
+    return list;
+  };
+
+  const formatDateOnly = (timestamp) => {
+    try {
+      const date = new Date(timestamp);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    } catch (e) {
+      return timestamp;
+    }
+  };
+
+  const formatDiff = (diff) => {
+    if (diff > 0) return `+${diff.toFixed(3)}%`;
+    if (diff < 0) return `${diff.toFixed(3)}%`;
+    return `0.000%`;
+  };
+
+  const formatVotesVar = (votesVar) => {
+    if (votesVar > 0) return `+${votesVar.toLocaleString('es-PE')}`;
+    if (votesVar < 0) return `${votesVar.toLocaleString('es-PE')}`;
+    return `0`;
+  };
+
   return (
     <section className="summary-section">
       {/* EXTRAPOLATION EXPLANATION BOX */}
@@ -202,6 +267,76 @@ export default function NationalSummary({
             )}
           </div>
         </div>
+
+        {/* Historial de últimas 10 actualizaciones */}
+        {!isExtrap && currentTab === 'peru' && (
+          <div className="glass-card updates-history-card">
+            <div className="metrics-title-group" style={{ marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '0.05em', color: 'var(--text-secondary)', textTransform: 'uppercase', margin: 0 }}>
+                Historial de Actualizaciones (ONPE Nacional)
+              </h3>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', margin: 0 }}>
+                Variación de votos oficiales absolutos y porcentaje acumulado de cada candidato en territorio nacional
+              </p>
+            </div>
+            
+            <div className="updates-list-container">
+              {getUpdatesHistory().map((update, idx) => (
+                 <div key={idx} className="update-item">
+                  <div className="update-item-header">
+                    <div className="update-time-badge" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>📅 {formatDateOnly(update.timestamp)}</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)', paddingLeft: '20px' }}>{update.timeDisplay}</span>
+                    </div>
+                    <div className="update-progress-badge" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px', textAlign: 'right' }}>
+                      <span>Actas Contab.:</span>
+                      <strong className="mono-font" style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{update.actsPct.toFixed(3)}%</strong>
+                    </div>
+                  </div>
+                  
+                  <div className="update-grid-header update-grid">
+                    <span>Candidato</span>
+                    <span style={{ textAlign: 'right' }}>Votos</span>
+                    <span style={{ textAlign: 'right' }}>% Acum.</span>
+                    <span style={{ textAlign: 'right' }}>Dif. %</span>
+                  </div>
+                  
+                  <div className="update-grid-row update-grid">
+                    <span className="candidate-name-col">
+                      <span className="candidate-color-dot roberto-dot"></span>
+                      R. Sánchez
+                    </span>
+                    <span className="votes-col" style={{ textAlign: 'right', color: update.robertoVotesVar > 0 ? '#10b981' : update.robertoVotesVar < 0 ? '#ef4444' : 'var(--text-secondary)' }}>
+                      {formatVotesVar(update.robertoVotesVar)}
+                    </span>
+                    <span className="pct-col green-text" style={{ textAlign: 'right' }}>
+                      {update.robertoPct.toFixed(3)}%
+                    </span>
+                    <span className={`diff-col ${update.robertoPctDiff > 0 ? 'diff-positive' : update.robertoPctDiff < 0 ? 'diff-negative' : 'diff-neutral'}`} style={{ textAlign: 'right' }}>
+                      {formatDiff(update.robertoPctDiff)}
+                    </span>
+                  </div>
+                  
+                  <div className="update-grid-row update-grid">
+                    <span className="candidate-name-col">
+                      <span className="candidate-color-dot keiko-dot"></span>
+                      K. Fujimori
+                    </span>
+                    <span className="votes-col" style={{ textAlign: 'right', color: update.keikoVotesVar > 0 ? '#10b981' : update.keikoVotesVar < 0 ? '#ef4444' : 'var(--text-secondary)' }}>
+                      {formatVotesVar(update.keikoVotesVar)}
+                    </span>
+                    <span className="pct-col orange-text" style={{ textAlign: 'right' }}>
+                      {update.keikoPct.toFixed(3)}%
+                    </span>
+                    <span className={`diff-col ${update.keikoPctDiff > 0 ? 'diff-positive' : update.keikoPctDiff < 0 ? 'diff-negative' : 'diff-neutral'}`} style={{ textAlign: 'right' }}>
+                      {formatDiff(update.keikoPctDiff)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
