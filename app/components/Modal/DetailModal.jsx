@@ -54,7 +54,7 @@ export default function DetailModal({ selectedRegion, currentTab, isExtrap, onCl
           {/* Quick stats grid */}
           <div className="modal-grid">
             <div className="modal-widget">
-              <span className="m-lbl">Actas Contabilizadas</span>
+              <span className="m-lbl">{isExtrap ? 'Avance ONPE Real' : 'Actas Contabilizadas'}</span>
               <span className="m-val mono-font">{selectedRegion.actasContabilizadas.toFixed(3)}%</span>
             </div>
             <div className="modal-widget">

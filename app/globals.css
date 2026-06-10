@@ -889,6 +889,16 @@ main {
 .region-cand-line.winner.keiko-lead { color: var(--color-keiko); }
 .region-cand-line.winner.roberto-lead { color: var(--color-roberto); }
 
+.region-cand-subline {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 11px;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+}
+
 .card-ftr {
   display: flex;
   justify-content: space-between;
@@ -941,6 +951,7 @@ main {
   background: rgba(8, 10, 18, 0.92) !important;
   backdrop-filter: blur(32px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
+  color: var(--text-primary);
 }
 
 .modal-overlay.active .modal-card {
@@ -1022,6 +1033,13 @@ main {
 .m-val {
   font-size: 20px;
   font-weight: 900;
+  color: var(--text-primary);
+}
+.m-val.orange-text {
+  color: var(--color-keiko);
+}
+.m-val.green-text {
+  color: var(--color-roberto);
 }
 
 .m-sub {

@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="es-PE">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <title>Proyección y Extrapolación Segunda Vuelta 2026 · ONPE Oficial</title>
-  <meta name="description" content="Dashboard premium de proyección y extrapolación matemática al 100% de actas contabilizadas para las elecciones presidenciales de segunda vuelta en Perú 2026.">
-  <meta name="keywords" content="elecciones 2026, segunda vuelta peru, ONPE api, extrapolacion electoral, Keiko Fujimori, Roberto Sanchez, ciencia de datos electoral">
+  <meta name="description"
+    content="Dashboard premium de proyección y extrapolación matemática al 100% de actas contabilizadas para las elecciones presidenciales de segunda vuelta en Perú 2026.">
+  <meta name="keywords"
+    content="elecciones 2026, segunda vuelta peru, ONPE api, extrapolacion electoral, Keiko Fujimori, Roberto Sanchez, ciencia de datos electoral">
   <meta name="theme-color" content="#080c14">
   <meta name="author" content="Antigravity Data Analytics">
-  
+
   <!-- Preload fonts for speed -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="style.css">
-  
+
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
   <!-- BACKGROUND DECORATIONS -->
@@ -40,7 +46,7 @@
           <p>Análisis Estadístico de Extrapolación de Segunda Vuelta</p>
         </div>
       </div>
-      
+
       <div class="live-status-badge">
         <span class="live-pulse" aria-hidden="true"></span>
         <span class="live-text">CONEXIÓN DIRECTA ONPE</span>
@@ -52,26 +58,39 @@
 
   <!-- MAIN CONTAINER -->
   <main class="container">
-    
+
     <!-- MAIN TAB NAVIGATION -->
     <div class="tabs-container">
       <button id="tab-peru" class="tab-btn active" title="Ver votos de territorio nacional">
-        <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+          <line x1="4" y1="22" x2="4" y2="15" />
+        </svg>
         PERÚ (Voto Nacional)
       </button>
       <button id="tab-extranjero" class="tab-btn" title="Ver votos del exterior por continente">
-        <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+          <path d="M2 12h20" />
+        </svg>
         EXTRANJERO (Voto Exterior)
       </button>
     </div>
-    
+
     <!-- HERO SECTION: NATIONAL SUMMARY -->
     <section class="summary-section" aria-labelledby="national-summary-title">
       <h2 id="national-summary-title" class="section-title">
-        <svg class="title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        <svg class="title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18" />
+          <path d="m19 9-5 5-4-4-3 3" />
+        </svg>
         Consolidado Nacional (25 Regiones)
       </h2>
-      
+
       <!-- INTERACTION CONTROL BAR -->
       <section class="controls-section" aria-label="Controles de vista">
         <!-- Current vs Extrapolated Toggle -->
@@ -80,18 +99,28 @@
           <button id="btn-view-extrapolated" class="toggle-btn">Proyección Extrapolada</button>
         </div>
       </section>
-      
+
       <!-- EXTRAPOLATION EXPLANATION BOX -->
       <div id="extrapolation-info-box" class="info-box-container">
         <div class="info-box-content">
-          <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
           <div class="info-text">
             <strong>¿Cómo funciona la Proyección Extrapolada?</strong>
-            <p>Es un modelo matemático que estima el resultado final al 100% de actas basándose en el comportamiento de votación local de cada región. En lugar de aplicar el promedio nacional a los votos faltantes (lo que sesgaría el resultado debido a que unas regiones procesan sus actas más rápido que otras), proyectamos cada departamento de forma independiente respetando su proporción actual de voto. Esto proporciona un análisis estadístico estable, objetivo y libre de sesgo geográfico.</p>
+            <p>Es un modelo matemático que estima el resultado final al 100% de actas basándose en el comportamiento de
+              votación local de cada región. En lugar de aplicar el promedio nacional a los votos faltantes (lo que
+              sesgaría el resultado debido a que unas regiones procesan sus actas más rápido que otras), proyectamos
+              cada departamento de forma independiente respetando su proporción actual de voto. Esto proporciona un
+              análisis estadístico estable, objetivo y libre de sesgo geográfico.</p>
           </div>
         </div>
       </div>
-      
+
       <div class="national-layout">
         <!-- Doughnut Votes Distribution Card -->
         <div class="glass-card doughnut-card">
@@ -104,7 +133,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Comparison Statistics Card -->
         <div class="glass-card metrics-card">
           <div class="metrics-header">
@@ -116,7 +145,7 @@
               Diferencia: <span id="nat-margin-val" class="mono-font">—</span>
             </div>
           </div>
-          
+
           <!-- Candidates Head to Head -->
           <div class="candidate-vs-container">
             <!-- Keiko Fujimori -->
@@ -133,7 +162,7 @@
                 <span id="nat-keiko-votes" class="votes mono-font">—</span>
               </div>
             </div>
-            
+
             <!-- Roberto Sanchez -->
             <div class="cand-panel cand-roberto">
               <div class="cand-meta">
@@ -149,7 +178,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Split Progress Bar -->
           <div class="progress-bar-wrapper">
             <div class="split-bar">
@@ -157,7 +186,7 @@
               <div id="bar-roberto" class="bar-fill green-bg" style="width: 50%;"></div>
             </div>
           </div>
-          
+
           <div class="widget-row">
             <div class="widget-leader">
               <span class="widget-lbl">Tendencia:</span>
@@ -188,10 +217,16 @@
     <section class="search-sort-section" aria-label="Búsqueda y ordenamiento">
       <!-- Search Input -->
       <div class="search-box">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="search-input" class="search-input" placeholder="Buscar departamento o código..." autocomplete="off" spellcheck="false">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+          aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input type="text" id="search-input" class="search-input" placeholder="Buscar departamento o código..."
+          autocomplete="off" spellcheck="false">
       </div>
-      
+
       <!-- Sorting -->
       <div class="sort-box">
         <label for="sort-select" class="sort-lbl">Ordenar:</label>
@@ -203,7 +238,13 @@
           <option value="margin">Ventaja %</option>
         </select>
         <button id="sort-dir-btn" class="sort-dir-btn" title="Invertir Orden" aria-label="Invertir Dirección de Orden">
-          <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+          <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 16 4 4 4-4" />
+            <path d="M7 20V4" />
+            <path d="m21 8-4-4-4 4" />
+            <path d="M17 4v16" />
+          </svg>
         </button>
       </div>
     </section>
@@ -224,10 +265,13 @@
           <span id="modal-ubigeo" class="mono-font">Ubigeo: —</span>
         </div>
         <button id="modal-close" class="modal-close-btn" aria-label="Cerrar modal" title="Cerrar">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
         </button>
       </div>
-      
+
       <div class="modal-body">
         <!-- Quick stats grid -->
         <div class="modal-grid">
@@ -250,7 +294,7 @@
             <span id="m-roberto-votes" class="m-sub mono-font">—</span>
           </div>
         </div>
-        
+
         <!-- Regional evolution line chart -->
         <div class="modal-chart-section">
           <h3 class="modal-chart-title">Evolución de la Votación Histórica en el Departamento</h3>
@@ -266,7 +310,8 @@
   <footer>
     <div class="container footer-inner">
       <p>Dashboard de Análisis Independiente de Datos Electorales. Segunda Vuelta Presidencial Perú 2026.</p>
-      <p>Los datos mostrados provienen directamente de los servidores oficiales de la <strong>Oficina Nacional de Procesos Electorales (ONPE)</strong>.</p>
+      <p>Los datos mostrados provienen directamente de los servidores oficiales de la <strong>Oficina Nacional de
+          Procesos Electorales (ONPE)</strong>.</p>
       <p>&copy; 2026 Antigravity Data Analytics. Todos los derechos reservados.</p>
     </div>
   </footer>
@@ -275,4 +320,5 @@
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
+
 </html>

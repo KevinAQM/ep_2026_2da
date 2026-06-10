@@ -208,7 +208,9 @@ export default function PeruMap({ regiones, isExtrap, onRegionClick }) {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '6px', marginBottom: '8px' }}>
             <span style={{ fontWeight: '800', fontSize: '13px', color: '#f3f4f6' }}>{tooltip.data.nombre}</span>
-            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: '700' }}>{tooltip.data.actas.toFixed(2)}% actas</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: '700' }}>
+              {isExtrap ? 'Avance Real: ' : ''}{tooltip.data.actas.toFixed(2)}%{isExtrap ? '' : ' actas'}
+            </span>
           </div>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
@@ -228,10 +230,24 @@ export default function PeruMap({ regiones, isExtrap, onRegionClick }) {
               {tooltip.data.rPct.toFixed(3)}%
             </span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', paddingLeft: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', paddingLeft: '8px', marginBottom: isExtrap ? '8px' : '0px' }}>
             <span>Votos:</span>
             <span className="mono-font">{tooltip.data.rVotes.toLocaleString('es-PE')}</span>
           </div>
+
+          {isExtrap && (
+            <div style={{
+              borderTop: '1px solid rgba(255,255,255,0.08)',
+              paddingTop: '8px',
+              marginTop: '4px',
+              fontSize: '10px',
+              color: 'var(--text-muted)',
+              fontStyle: 'italic',
+              textAlign: 'center'
+            }}>
+              Proyección estimada al 100%
+            </div>
+          )}
         </div>
       )}
     </div>
