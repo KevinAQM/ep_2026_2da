@@ -58,7 +58,7 @@ export default function DetailModal({ selectedRegion, currentTab, isExtrap, onCl
               <span className="m-val mono-font">{selectedRegion.actasContabilizadas.toFixed(3)}%</span>
             </div>
             <div className="modal-widget">
-              <span className="m-lbl">Votos Válidos</span>
+              <span className="m-lbl">{isExtrap ? 'Votos Válidos Proyectados' : 'Votos Válidos'}</span>
               <span className="m-val mono-font">{(isExtrap ? selectedRegion.calc.validExtrap : selectedRegion.calc.valid).toLocaleString('es-PE')}</span>
             </div>
             <div className="modal-widget orange-border">
@@ -82,11 +82,13 @@ export default function DetailModal({ selectedRegion, currentTab, isExtrap, onCl
           </div>
           
           {/* Non-valid votes breakdown */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '-16px', marginBottom: '24px', padding: '0 4px' }}>
-            <span>Votos en Blanco: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.blank_votos || 0).toLocaleString('es-PE')}</strong></span>
-            <span>Votos Nulos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.null_votos || 0).toLocaleString('es-PE')}</strong></span>
-            <span>Votos Emitidos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.totalVotos || 0).toLocaleString('es-PE')}</strong></span>
-          </div>
+          {!isExtrap && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '-16px', marginBottom: '24px', padding: '0 4px' }}>
+              <span>Votos en Blanco: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.blank_votos || 0).toLocaleString('es-PE')}</strong></span>
+              <span>Votos Nulos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.null_votos || 0).toLocaleString('es-PE')}</strong></span>
+              <span>Votos Emitidos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.totalVotos || 0).toLocaleString('es-PE')}</strong></span>
+            </div>
+          )}
           
           {/* Regional evolution line chart */}
           <div className="modal-chart-section">
