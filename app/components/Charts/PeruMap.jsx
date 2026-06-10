@@ -26,10 +26,10 @@ const SVG_TO_UBIGEO = {
   'PE-PAS': '180000', // Pasco
   'PE-PIU': '190000', // Piura
   'PE-PUN': '200000', // Puno
-  'PE-SAM': '220000', // San Martín
-  'PE-TAC': '230000', // Tacna
-  'PE-TUM': '250000', // Tumbes
-  'PE-UCA': '260000', // Ucayali
+  'PE-SAM': '210000', // San Martín
+  'PE-TAC': '220000', // Tacna
+  'PE-TUM': '230000', // Tumbes
+  'PE-UCA': '250000', // Ucayali
 };
 
 export default function PeruMap({ regiones, isExtrap, onRegionClick }) {
