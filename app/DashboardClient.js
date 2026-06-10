@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Header from './components/Header';
 import ViewToggle from './components/Controls/ViewToggle';
 import NationalSummary from './components/NationalSummary';
@@ -8,14 +8,20 @@ import SearchBar from './components/Controls/SearchBar';
 import RegionGrid from './components/RegionList/RegionGrid';
 import DetailModal from './components/Modal/DetailModal';
 import Footer from './components/Footer';
+import { processData } from './lib/utils';
+
 
 export default function DashboardClient({ initialData, rawData }) {
-  // processedData is passed down from page.js Server Component
-  const processedData = initialData;
-  const [loading, setLoading] = useState(false);
+  // Local reactive states for auto-polling updates
+  const [localProcessedData, setLocalProcessedData] = useState(initialData);
+  const [localRawData, setLocalRawData] = useState(rawData);
+  const [autoPoll, setAutoPoll] = useState(false);
+  const [isPolling, setIsPolling] = useState(false);
+  
+  const processedData = localProcessedData;
   const [error, setError] = useState(false);
   
-  // States matching app.js engine
+  // Dashboard navigation states
   const [currentTab, setCurrentTab] = useState('peru'); // 'peru' or 'extranjero'
   const [currentViewMode, setCurrentViewMode] = useState('current'); // 'current' or 'extrapolated'
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,6 +29,35 @@ export default function DashboardClient({ initialData, rawData }) {
   const [sortDir, setSortDir] = useState('asc');
   
   const [modalUbigeo, setModalUbigeo] = useState(null);
+
+  // Auto-polling effect
+  useEffect(() => {
+    if (!autoPoll) return;
+
+    const fetchLatestData = async () => {
+      setIsPolling(true);
+      try {
+        const res = await fetch('/api/data');
+        if (res.ok) {
+          const json = await res.json();
+          const processed = processData(json);
+          setLocalProcessedData(processed);
+          setLocalRawData(json);
+        }
+      } catch (err) {
+        console.error("Error in auto-polling:", err);
+      } finally {
+        setIsPolling(false);
+      }
+    };
+
+    // Run first polling fetch immediately
+    fetchLatestData();
+
+    // Poll every 30 seconds
+    const interval = setInterval(fetchLatestData, 30000);
+    return () => clearInterval(interval);
+  }, [autoPoll]);
 
   // Tab switching — preserves current view mode selection
   const handleTabChange = (tab) => {
@@ -36,7 +71,6 @@ export default function DashboardClient({ initialData, rawData }) {
     setSortDir(prev => prev === 'asc' ? 'desc' : 'asc');
   };
 
-  // In App Router, loading and errors are better handled natively via loading.js and error.js
   if (error || !processedData) {
     return (
       <main className="container" style={{ paddingTop: '120px', textAlign: 'center' }}>
@@ -109,18 +143,29 @@ export default function DashboardClient({ initialData, rawData }) {
       <div className="blob blob-orange" aria-hidden="true"></div>
       <div className="blob blob-green" aria-hidden="true"></div>
 
-      <Header rawData={rawData} />
+      <Header rawData={localRawData} />
       
       <ViewToggle 
         currentViewMode={currentViewMode} 
         setCurrentViewMode={setCurrentViewMode}
         currentTab={currentTab}
         handleTabChange={handleTabChange}
+        autoPoll={autoPoll}
+        setAutoPoll={setAutoPoll}
+        isPolling={isPolling}
       />
 
       {/* MAIN CONTAINER */}
       <main className="container">
-        <NationalSummary isExtrap={isExtrap} currentTab={currentTab} nat={nat} natData={natData} />
+        <NationalSummary 
+          isExtrap={isExtrap} 
+          currentTab={currentTab} 
+          nat={nat} 
+          natData={natData} 
+          regiones={processedData.regiones}
+          projectionsHistory={processedData.projections_history}
+          onRegionClick={setModalUbigeo}
+        />
         
         <SearchBar 
           currentTab={currentTab}
@@ -131,6 +176,7 @@ export default function DashboardClient({ initialData, rawData }) {
           sortDir={sortDir}
           toggleSortDir={toggleSortDir}
         />
+
         
         <RegionGrid 
           sortedList={sortedList} 

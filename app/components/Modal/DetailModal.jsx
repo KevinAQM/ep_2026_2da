@@ -81,6 +81,13 @@ export default function DetailModal({ selectedRegion, currentTab, isExtrap, onCl
             </div>
           </div>
           
+          {/* Non-valid votes breakdown */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '-16px', marginBottom: '24px', padding: '0 4px' }}>
+            <span>Votos en Blanco: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.blank_votos || 0).toLocaleString('es-PE')}</strong></span>
+            <span>Votos Nulos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.null_votos || 0).toLocaleString('es-PE')}</strong></span>
+            <span>Votos Emitidos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(selectedRegion.totalVotos || 0).toLocaleString('es-PE')}</strong></span>
+          </div>
+          
           {/* Regional evolution line chart */}
           <div className="modal-chart-section">
             <h3 className="modal-chart-title">Evolución de la Votación Histórica</h3>

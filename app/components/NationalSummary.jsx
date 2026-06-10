@@ -1,8 +1,46 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import DoughnutChart from './Charts/DoughnutChart';
+import PeruMap from './Charts/PeruMap';
 import { IconInfo } from './ui/Icons';
 
-export default function NationalSummary({ isExtrap, currentTab, nat, natData }) {
+const miniTabStyle = {
+  background: 'transparent',
+  border: 'none',
+  color: 'var(--text-muted)',
+  fontSize: '11px',
+  fontWeight: '700',
+  padding: '6px 12px',
+  borderRadius: '6px',
+  cursor: 'pointer',
+  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+};
+
+const activeMiniTabStyle = {
+  background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+  color: '#ffffff',
+  boxShadow: '0 2px 8px rgba(236, 72, 153, 0.3)',
+};
+
+export default function NationalSummary({ 
+  isExtrap, 
+  currentTab, 
+  nat, 
+  natData, 
+  regiones, 
+  projectionsHistory, 
+  onRegionClick 
+}) {
+  const [activeVisualTab, setActiveVisualTab] = useState('doughnut');
+
+  // Automatically reset map tab if switching to extranjero
+  useEffect(() => {
+    if (currentTab === 'extranjero' && activeVisualTab === 'map') {
+      setActiveVisualTab('doughnut');
+    }
+  }, [currentTab, activeVisualTab]);
+
   return (
     <section className="summary-section">
       {/* EXTRAPOLATION EXPLANATION BOX */}
@@ -97,23 +135,61 @@ export default function NationalSummary({ isExtrap, currentTab, nat, natData }) 
               <span className="mini-val mono-font">{natData.valid.toLocaleString('es-PE')}</span>
             </div>
           </div>
+
+          {/* Non-valid votes breakdown */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '20px', borderTop: '1px dashed var(--border-color)', paddingTop: '12px' }}>
+            <span>Votos en Blanco: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.blank || 0).toLocaleString('es-PE')}</strong></span>
+            <span>Votos Nulos: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.null || 0).toLocaleString('es-PE')}</strong></span>
+            <span>Participación Est.: <strong style={{ color: 'var(--text-secondary)' }} className="mono-font">{(natData.emitidos || 0).toLocaleString('es-PE')} emitidos</strong></span>
+          </div>
         </div>
 
-        {/* Doughnut Votes Distribution Card — second */}
-        <div className="glass-card doughnut-card">
-          <h3 className="card-title">
-            {isExtrap ? 'Distribución de Votos Proyectados' : 'Distribución de Votos Válidos'}
-          </h3>
-          <div className="doughnut-canvas-container">
-            <DoughnutChart data={natData} />
-            <div className="doughnut-center-lbl">
-              <span className="mono-font">
-                {isExtrap ? '100.000%' : `${nat.actsPct.toFixed(3)}%`}
-              </span>
-              <span className="center-sub">
-                {isExtrap ? 'Actas Proy.' : 'Actas'}
-              </span>
+        {/* Visualizer Selector Card — second */}
+        <div className="glass-card doughnut-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: '390px' }}>
+          {currentTab === 'peru' ? (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '0.05em', color: 'var(--text-secondary)', textTransform: 'uppercase', margin: 0 }}>
+                Visualización
+              </h3>
+              <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', padding: '2px', borderRadius: '8px' }}>
+                <button 
+                  onClick={() => setActiveVisualTab('doughnut')}
+                  style={{ ...miniTabStyle, ...(activeVisualTab === 'doughnut' ? activeMiniTabStyle : {}) }}
+                >
+                  Rosca
+                </button>
+                <button 
+                  onClick={() => setActiveVisualTab('map')}
+                  style={{ ...miniTabStyle, ...(activeVisualTab === 'map' ? activeMiniTabStyle : {}) }}
+                >
+                  Mapa
+                </button>
+              </div>
             </div>
+          ) : (
+            <h3 className="card-title" style={{ alignSelf: 'center', textAlign: 'center', marginBottom: '24px' }}>
+              {isExtrap ? 'Distribución de Votos Proyectados' : 'Distribución de Votos Válidos'}
+            </h3>
+          )}
+
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+            {activeVisualTab === 'doughnut' && (
+              <div className="doughnut-canvas-container">
+                <DoughnutChart data={natData} />
+                <div className="doughnut-center-lbl">
+                  <span className="mono-font">
+                    {isExtrap ? '100.000%' : `${nat.actsPct.toFixed(3)}%`}
+                  </span>
+                  <span className="center-sub">
+                    {isExtrap ? 'Actas Proy.' : 'Actas'}
+                  </span>
+                </div>
+              </div>
+            )}
+            
+            {activeVisualTab === 'map' && currentTab === 'peru' && (
+              <PeruMap regiones={regiones} isExtrap={isExtrap} onRegionClick={onRegionClick} />
+            )}
           </div>
         </div>
       </div>

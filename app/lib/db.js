@@ -19,6 +19,26 @@ if (kvUrl && kvToken) {
 }
 
 export async function getElectionData() {
+  // Ensure peruLow.svg is downloaded and present in public directory
+  const publicDir = path.join(process.cwd(), 'public');
+  const svgPath = path.join(publicDir, 'peruLow.svg');
+  if (!fs.existsSync(svgPath)) {
+    try {
+      console.log("Downloading peruLow.svg from amCharts...");
+      const resSvg = await fetch("https://www.amcharts.com/lib/3/maps/svg/peruLow.svg");
+      if (resSvg.ok) {
+        const svgText = await resSvg.text();
+        if (!fs.existsSync(publicDir)) {
+          fs.mkdirSync(publicDir, { recursive: true });
+        }
+        fs.writeFileSync(svgPath, svgText);
+        console.log("Successfully downloaded and saved peruLow.svg to public/peruLow.svg");
+      }
+    } catch (e) {
+      console.error("Failed to download peruLow.svg at startup:", e);
+    }
+  }
+
   let dbData = { regiones: [], extranjero: [], latest: {}, projections_history: [] };
   let loadedFromKV = false;
   

@@ -1,12 +1,20 @@
 import React from 'react';
 import { IconPeru, IconExtranjero } from '../ui/Icons';
 
-export default function ViewToggle({ currentViewMode, setCurrentViewMode, currentTab, handleTabChange }) {
+export default function ViewToggle({ 
+  currentViewMode, 
+  setCurrentViewMode, 
+  currentTab, 
+  handleTabChange,
+  autoPoll,
+  setAutoPoll,
+  isPolling
+}) {
   return (
     <div className="sticky-buttons-bar">
       <div className="container sticky-buttons-inner">
         {/* INTERACTION CONTROL BAR */}
-        <section className="controls-section" aria-label="Controles de vista">
+        <section className="controls-section" aria-label="Controles de vista" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '16px', width: '100%' }}>
           <div className="btn-group-toggle">
             <button 
               className={`toggle-btn ${currentViewMode === 'current' ? 'active' : ''}`}

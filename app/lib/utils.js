@@ -3,6 +3,8 @@ export function computeMetricsForList(list) {
   let currentKeiko = 0;
   let currentRoberto = 0;
   let currentValid = 0;
+  let currentBlank = 0;
+  let currentNull = 0;
   
   let extrapKeiko = 0;
   let extrapRoberto = 0;
@@ -15,6 +17,8 @@ export function computeMetricsForList(list) {
     const kVotes = r.keiko_votos || 0;
     const rVotes = r.roberto_votos || 0;
     const valid = kVotes + rVotes;
+    const blank = r.blank_votos || 0;
+    const nullV = r.null_votos || 0;
     
     const kProj = r.keiko_projected || 0;
     const rProj = r.roberto_projected || 0;
@@ -23,6 +27,8 @@ export function computeMetricsForList(list) {
     currentKeiko += kVotes;
     currentRoberto += rVotes;
     currentValid += valid;
+    currentBlank += blank;
+    currentNull += nullV;
     
     extrapKeiko += kProj;
     extrapRoberto += rProj;
@@ -57,6 +63,9 @@ export function computeMetricsForList(list) {
       roberto: currentRoberto,
       robertoPct: currentValid > 0 ? (currentRoberto / currentValid * 100) : 50.0,
       valid: currentValid,
+      blank: currentBlank,
+      null: currentNull,
+      emitidos: currentValid + currentBlank + currentNull,
       margin: Math.abs(currentKeiko - currentRoberto),
       marginPct: currentValid > 0 ? Math.abs((currentKeiko / currentValid * 100) - (currentRoberto / currentValid * 100)) : 0.0,
       leader: currentKeiko > currentRoberto ? 'Keiko Fujimori' : 'Roberto Sánchez'
@@ -67,6 +76,9 @@ export function computeMetricsForList(list) {
       roberto: extrapRoberto,
       robertoPct: extrapValid > 0 ? (extrapRoberto / extrapValid * 100) : 50.0,
       valid: extrapValid,
+      blank: currentBlank, // Fallback to current
+      null: currentNull,   // Fallback to current
+      emitidos: extrapValid + currentBlank + currentNull,
       margin: Math.abs(extrapKeiko - extrapRoberto),
       marginPct: extrapValid > 0 ? Math.abs((extrapKeiko / extrapValid * 100) - (extrapRoberto / extrapValid * 100)) : 0.0,
       leader: extrapKeiko > extrapRoberto ? 'Keiko Fujimori' : 'Roberto Sánchez'

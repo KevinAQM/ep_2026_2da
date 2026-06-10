@@ -232,7 +232,14 @@ export async function GET(request) {
     const expectedSecret = process.env.API_SECRET_TOKEN;
 
     if (!expectedSecret || secret !== expectedSecret) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      // Fallback for public requests: Serve cached data from database/Vercel KV
+      const dbData = await getElectionData();
+      return NextResponse.json(dbData, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=5',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
     }
 
     // 1. Load existing database
@@ -258,9 +265,12 @@ export async function GET(request) {
     
     if (!peDeptsRes || !peDeptsRes.data || !exContsRes || !exContsRes.data) {
       console.warn("ONPE API departments list failed. Serving cached database.");
-      return NextResponse.json(dbData, {
+      return NextResponse.json({
+        success: false,
+        error: "ONPE API departments list failed. Served cache."
+      }, {
         headers: {
-          'Cache-Control': 's-maxage=60, stale-while-revalidate=30'
+          'Cache-Control': 'no-store, max-age=0, must-revalidate'
         }
       });
     }
@@ -283,9 +293,12 @@ export async function GET(request) {
     
     if (peRecords.length === 0 || exRecords.length === 0) {
       console.warn("ONPE API detailed data failed. Serving cached database.");
-      return NextResponse.json(dbData, {
+      return NextResponse.json({
+        success: false,
+        error: "ONPE API detailed data failed. Served cache."
+      }, {
         headers: {
-          'Cache-Control': 's-maxage=60, stale-while-revalidate=30'
+          'Cache-Control': 'no-store, max-age=0, must-revalidate'
         }
       });
     }
@@ -424,7 +437,7 @@ export async function GET(request) {
       projections_history: history
     };
     
-    // 5. Save back database if KV is available
+    // 5. Save back database if KV is available, else local backup
     if (kv) {
       try {
         await kv.set('election_data', combined);
@@ -432,10 +445,22 @@ export async function GET(request) {
       } catch (e) {
         console.error("Failed to save to Vercel KV:", e);
       }
+    } else {
+      try {
+        const filePath = path.join(process.cwd(), 'data.json');
+        fs.writeFileSync(filePath, JSON.stringify(combined, null, 2));
+        console.log("Successfully saved updated database to local data.json backup.");
+      } catch (e) {
+        console.error("Failed to save local data.json backup:", e);
+      }
     }
     
-    // Disable cache for cron updates
-    return NextResponse.json(combined, {
+    // Disable cache for cron updates - Return small success JSON to cron-job.org
+    return NextResponse.json({
+      success: true,
+      message: "Database updated successfully",
+      timestamp: combined.latest.fechaActualizacion
+    }, {
       headers: {
         'Cache-Control': 'no-store, max-age=0, must-revalidate',
         'Access-Control-Allow-Origin': '*'
