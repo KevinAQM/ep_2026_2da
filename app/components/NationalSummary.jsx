@@ -45,7 +45,7 @@ export default function NationalSummary({
     if (!projectionsHistory || projectionsHistory.length === 0) return [];
     
     const N = projectionsHistory.length;
-    const count = Math.min(10, N);
+    const count = Math.min(20, N);
     const list = [];
     
     for (let i = N - 1; i >= N - count; i--) {
@@ -333,7 +333,7 @@ export default function NationalSummary({
           </div>
         </div>
 
-        {/* Historial de últimas 10 actualizaciones */}
+        {/* Historial de últimas 20 actualizaciones */}
         {!isExtrap && (currentTab === 'peru' || currentTab === 'extranjero' || currentTab === 'todos') && (
           <div className="glass-card updates-history-card">
             <div className="metrics-title-group" style={{ marginBottom: '16px' }}>

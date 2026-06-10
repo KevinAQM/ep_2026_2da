@@ -53,20 +53,24 @@ $$P_{Roberto, proyectado} = \frac{V_{Roberto, Total, proyectado}}{V_{Keiko, Tota
 
 ---
 
-## 📂 Estructura del Proyecto (Migración a Next.js)
+## 📂 Estructura del Proyecto (Organización y Modularización)
 
-El proyecto se ha reestructurado utilizando la arquitectura de **Next.js (App Router)** y **React 19**, permitiendo el renderizado híbrido en servidor y cliente, y la integración de persistencia remota.
+El proyecto se ha reestructurado utilizando la arquitectura de **Next.js (App Router)** y **React 19**, aislando el código frontend del backend de automatización y almacenamiento de datos, con la siguiente organización:
 
 * **`app/`**:
   * **`page.js`**: Punto de entrada del servidor. Consulta los datos electorales del almacén de datos (KV/JSON) y los entrega al cliente para el renderizado inicial rápido.
-  * **`layout.js`**: Define el envoltorio común de la interfaz, metadatos optimizados para SEO y carga las tipografías modernas (Roboto y Open Sans).
-  * **`DashboardClient.js`**: El corazón del tablero interactivo en el cliente. Maneja la lógica de cambio de pestañas, búsqueda, ordenación, cálculos reactivos de consolidación y renderizado dinámico de gráficos.
-  * **`globals.css`**: Hoja de estilos unificada con diseño Glassmorphic (efectos de translúcido con `backdrop-filter`, sombras suaves, fondos degradados oscuros, micro-animaciones y soporte responsivo completo).
-  * **`api/data/route.js`**: Endpoint de API `/api/data`. Realiza la descarga concurrente en paralelo de las APIs oficiales de la ONPE para optimizar el rendimiento, calcula el modelo EMA, construye las series históricas y actualiza los registros en base de datos.
-  * **`lib/db.js`**: Adaptador de base de datos. Se conecta al servicio cloud **Vercel KV** (Redis) si están presentes las credenciales, y cuenta con un fallback de lectura/escritura en un archivo local `data.json`.
-* **`updater.py`**: Script robusto en Python que funciona como fallback del sistema para descargar la base de datos electoral de la ONPE localmente y generar los archivos `data.json` y `data.js`.
-* **`data.json` / `data.js`**: Fallbacks locales de base de datos para garantizar el funcionamiento continuo del dashboard sin conexión o ante límites de cuota de API.
-* **`package.json`**: Administrador de dependencias (React 19, Next.js 16, Chart.js, y `@vercel/kv`).
+  * **`layout.js`**: Define el envoltorio común de la interfaz, metadatos optimizados para SEO y carga las tipografías modernas.
+  * **`DashboardClient.js`**: El corazón del tablero interactivo en el cliente. Maneja la lógica de las pestañas, búsqueda, ordenación por locale, cálculos reactivos de consolidación, renderizado dinámico de gráficos y visibilidad condicional.
+  * **`globals.css`**: Hoja de estilos con diseño Glassmorphic (efectos de translúcido con `backdrop-filter`, sombras suaves, fondos degradados oscuros, micro-animaciones y soporte responsivo completo).
+  * **`components/`**: Componentes React reutilizables (`NationalSummary`, `RegionGrid`, `RegionCard`, `DetailModal`, `Header`, `Footer`, `Controls`, etc.).
+  * **`api/data/route.js`**: Endpoint de API `/api/data`. Realiza la descarga concurrente de las APIs oficiales de la ONPE para optimizar el rendimiento, calcula el modelo EMA, construye las series históricas y actualiza los registros en base de datos.
+  * **`lib/db.js`**: Adaptador de base de datos. Se conecta al servicio cloud **Vercel KV** (Redis) y cuenta con un fallback de lectura/escritura en un archivo local `data.json`.
+  * **`lib/utils.js`**: Funciones auxiliares para el procesamiento de datos electorales.
+* **`scripts/`** (Aislamiento de código Python):
+  * **`updater.py`**: Script robusto en Python que descarga la base de datos electoral de la ONPE localmente y actualiza `data.json` / `data.js`.
+  * **`export_data.py`**: Script para consultar la base de datos Upstash Redis / Vercel KV, recuperar el historial de las últimas 20 actualizaciones y exportarlas en formatos CSV, XLS y XLSX (con formato numérico a 3 decimales).
+* **`reports/`**: Directorio donde se almacenan y organizan los reportes de datos generados.
+* **`data.json` / `data.js`**: Fallbacks locales de base de datos para garantizar el funcionamiento continuo del dashboard sin conexión.
 
 ---
 
@@ -74,10 +78,19 @@ El proyecto se ha reestructurado utilizando la arquitectura de **Next.js (App Ro
 
 1. **Soporte de Voto Extranjero**: Integración completa para alternar dinámicamente entre el escrutinio de **Perú** (25 departamentos) y el **Extranjero** (5 continentes).
 2. **Selector de Vista**: Cambia con un solo clic entre ver los **Votos Oficiales ONPE** (conteo actual acumulado) y la **Proyección Estimada** (extrapolación al 100% mediante EMA).
-3. **Buscador Dinámico**: Filtro instantáneo por nombre de departamento, continente o código ubigeo.
-4. **Ordenación Avanzada**: Permite ordenar la lista de regiones por *Nombre*, *Avance de Actas*, *Votos Keiko %*, *Votos Roberto %* y *Ventaja %*.
-5. **Modales de Detalle Histórico**: Al hacer clic en cualquier región o continente, se despliega un panel emergente con información de desglose absoluto y un gráfico de líneas dinámico (Chart.js) que ilustra la evolución histórica de las proyecciones o votos a lo largo del conteo.
-6. **Diseño Premium**: Interfaz fluida adaptada a dispositivos móviles con una estética moderna en color violeta oscuro, badges de estado en vivo pulsantes y tooltips interactivos personalizados fuera del canvas de Chart.js para máxima nitidez visual.
+3. **Consistencia Visual en Candidate Panels**: En la tarjeta principal de estadísticas (`metrics-card`), los candidatos siempre empiezan con **Roberto Sánchez (verde) a la izquierda** y **Keiko Fujimori (naranja) a la derecha**, tanto en los paneles de visualización de datos como en la barra de progreso dividida.
+4. **Consistencia Visual en Tarjetas Regionales**: En la grilla de regiones, las tarjetas ahora muestran consistentemente a **Roberto Sánchez (verde) en la parte superior** y **Keiko Fujimori (naranja) en la parte inferior**, con su respectiva barra de progreso dividida (`split-bar`) teniendo la sección verde a la izquierda.
+5. **Historial de Actualizaciones (Widget de Flujo)**: Se ha agregado un widget Glassmorphism que muestra las últimas 20 actualizaciones del conteo oficial de la ONPE (ordenadas de más reciente a más antigua) con una barra de scroll vertical responsiva. Muestra:
+   * Fecha y hora en formato adaptado para móviles (en dos líneas).
+   * Variación absoluta de votos de cada candidato respecto a la actualización anterior ($+$ o $-$).
+   * Porcentaje de actas contabilizadas acumulado (calculado dinámicamente como promedio ponderado para el tab consolidado **TODOS**).
+   * Porcentaje acumulado y diferencia de margen porcentual.
+   Está disponible en las pestañas **PERÚ**, **EXTRANJERO** y **TODOS**.
+6. **Esquema de Visibilidad Dinámica para TODOS**:
+   * En el modo **Votos Oficiales ONPE**, al seleccionar el tab **TODOS**, la interfaz oculta la barra de búsqueda y la grilla de tarjetas regional, mostrando únicamente las métricas consolidadas, el gráfico de rosca y el historial consolidado de actualizaciones.
+   * En el modo **Proyección Estimada**, al seleccionar el tab **TODOS**, se oculta todo elemento posterior a la tarjeta del gráfico de rosca (sección vacía).
+7. **Buscador y Ordenamiento con Soporte de Tildes (Accents)**: Corrección del ordenamiento alfabético mediante `localeCompare` en español. Regiones como **ÁNCASH** y continentes como **ÁFRICA** se listan ahora en su orden correcto ("A"), eliminando errores de ordenación Unicode.
+8. **Exportación de Reportes**: Automatización de generación de reportes en múltiples formatos Excel a través de `export_data.py`.
 
 ---
 
@@ -89,8 +102,13 @@ Instala los paquetes necesarios definidos en el proyecto:
 npm install
 ```
 
-### 2. Variables de Entorno (.env.local)
-Crea un archivo `.env.local` en la raíz del proyecto para habilitar la persistencia remota en Vercel KV y asegurar el endpoint de actualización:
+Para ejecutar los scripts de reportes en Python, instala sus dependencias adicionales:
+```bash
+pip install openpyxl pandas requests python-dotenv
+```
+
+### 2. Variables de Entorno (.env.development.local / .env.local)
+Crea un archivo `.env.development.local` o `.env.local` en la raíz del proyecto:
 ```env
 KV_REST_API_URL=tu_url_de_vercel_kv
 KV_REST_API_TOKEN=tu_token_de_vercel_kv
@@ -106,14 +124,20 @@ La aplicación estará disponible de forma interactiva en:
 👉 [**http://localhost:3000**](http://localhost:3000)
 
 ### 4. Actualización de Datos vía API Endpoint
-Para desencadenar la actualización de datos directamente desde el endpoint seguro del servidor, realiza una petición GET con el token configurado:
+Realiza una petición GET segura para actualizar la base de datos en tiempo real:
 ```bash
 curl -X GET "http://localhost:3000/api/data?secret=tu_token_secreto_para_el_endpoint_de_actualizacion"
 ```
-Este endpoint descargará los datos en paralelo, aplicará el modelo EMA, registrará el historial si hay avance de actas y guardará el resultado en Vercel KV de forma atómica.
 
-### 5. Actualización Manual por Consola (Python)
-Si prefieres usar el script alternativo de Python para sincronizar datos a nivel local (`data.json` y `data.js`), ejecuta:
+### 5. Actualización Manual (Consola Python)
+Para ejecutar el script de actualización manual de datos locales:
 ```bash
-python3 updater.py
+python3 scripts/updater.py
 ```
+
+### 6. Exportación de Reportes de Actualización
+Para conectarse a Redis/KV y descargar las últimas 20 actualizaciones históricas a archivos de reporte:
+```bash
+python3 scripts/export_data.py
+```
+Los archivos se guardarán en la carpeta `reports/`.
