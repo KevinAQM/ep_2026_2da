@@ -33,7 +33,7 @@ export default function ViewToggle({
         </section>
 
         {/* MAIN TAB NAVIGATION */}
-        <div className="tabs-wrapper">
+        <div className="tabs-wrapper" style={{ gap: '12px' }}>
           <div className="tabs-container">
             <button 
               className={`tab-btn ${currentTab === 'todos' ? 'active' : ''}`}
@@ -43,6 +43,8 @@ export default function ViewToggle({
               <IconTodos className="tab-icon" />
               TODOS
             </button>
+          </div>
+          <div className="tabs-container">
             <button 
               className={`tab-btn ${currentTab === 'peru' ? 'active' : ''}`}
               onClick={() => handleTabChange('peru')}

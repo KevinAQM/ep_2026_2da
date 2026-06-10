@@ -25,7 +25,7 @@ export const metadata = {
   keywords: "elecciones 2026, segunda vuelta peru, ONPE resultados, extrapolacion electoral, Keiko Fujimori, Roberto Sanchez, proyeccion electoral",
   authors: [{ name: "QM Solutions - Data Analytics Department" }],
   icons: {
-    icon: "/FullLogo_Transparent.png",
+    icon: "/FullLogo_Transparent_NoBuffer.ico",
   },
   openGraph: {
     title: "Elecciones Presidenciales 2026 - Segunda Vuelta",
