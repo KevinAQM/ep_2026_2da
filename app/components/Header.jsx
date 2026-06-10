@@ -18,7 +18,7 @@ export default function Header({ rawData }) {
     <header>
       <div className="container header-inner">
         <div className="brand">
-          <div className="brand-avatar" aria-hidden="true">
+          <div className="brand-avatar" aria-hidden="true" style={{ cursor: 'pointer' }} onClick={() => window.location.reload()}>
             <img
               src="/FullLogo_Transparent.png"
               alt="QM Solutions Logo"
